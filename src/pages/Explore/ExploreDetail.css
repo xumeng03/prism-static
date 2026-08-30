@@ -1,0 +1,161 @@
+/* ─── Page ─────────────────────────────────────────────────── */
+.ei-page {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Layout: left image + right sidebar ──────────────────── */
+.ei-layout {
+  display: flex;
+  align-items: stretch;
+  /* 至少撑满 main（100vh − header 52 − footer 225），否则横图偏矮时底部会留白 */
+  min-height: calc(100vh - 277px);
+  padding: 32px 48px 32px 48px;
+  gap: 32px;
+}
+
+/* ─── Left: image column ───────────────────────────────────── */
+.ei-img-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 缩略图 + 原图的外层容器：relative 让原图绝对定位覆盖在缩略图上，尺寸由缩略图决定 */
+.ei-img-wrap {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.ei-img {
+  display: block;
+  /* 高度按视口算：52px header + 布局上下各 32px padding，否则竖屏图会撑出屏幕 */
+  max-width: 100%;
+  max-height: calc(100vh - 116px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* ─── Right: info column ───────────────────────────────────── */
+.ei-info-col {
+  width: 266px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── Cards ────────────────────────────────────────────────── */
+.ei-card {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.ei-card-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.ei-section-label {
+  margin: 0 0 10px;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ei-detail-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.ei-detail-row + .ei-detail-row {
+  border-top: 1px solid var(--line);
+}
+
+.ei-detail-k {
+  flex-shrink: 0;
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+.ei-detail-v {
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Card 3: Engagement ───────────────────────────────────── */
+.ei-engagement {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ei-eng-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-3);
+}
+
+.ei-eng-item b {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.ei-eng-item span {
+  font-size: 11px;
+}
+
+.ei-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ei-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ei-actions-row .btn {
+  flex: 1;
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .ei-layout {
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .ei-img-col {
+    min-height: 40vh;
+  }
+
+  .ei-img {
+    max-height: 50vh;
+  }
+
+  .ei-info-col {
+    width: 100%;
+  }
+}

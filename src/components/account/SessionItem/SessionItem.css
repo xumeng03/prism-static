@@ -1,0 +1,75 @@
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.session-row:first-child {
+  padding-top: 0;
+}
+
+.session-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.session-ic {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--bg);
+  color: var(--text-2);
+}
+
+.session-ic svg {
+  width: 20px;
+  height: 20px;
+}
+
+.session-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-info b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.session-info p {
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 12.5px;
+}
+
+.session-now {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(26, 141, 76, 0.14);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.session-out {
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border-radius: 999px;
+  color: var(--accent-text);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.session-out:hover {
+  background: var(--accent-dim);
+}

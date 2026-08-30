@@ -1,0 +1,142 @@
+.legal-page {
+  min-height: calc(100vh - 277px);
+  padding: 48px 0 80px;
+}
+
+.legal-layout {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.legal-nav {
+  position: sticky;
+  top: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.legal-nav-label {
+  padding: 10px 14px 6px;
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.legal-nav-label-toc {
+  margin-top: 18px;
+}
+
+.legal-doc {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.legal-doc:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.legal-doc.active {
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.legal-toc-item {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  color: var(--text-3);
+  font-size: 13.5px;
+  line-height: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s, color 0.15s;
+}
+
+.legal-toc-item:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.legal-content {
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.legal-content h1 {
+  font-size: 34px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.legal-updated {
+  color: var(--text-3);
+  font-size: 14px;
+  margin-bottom: 36px;
+}
+
+.legal-section {
+  margin-bottom: 34px;
+  scroll-margin-top: 88px;
+}
+
+.legal-section h3 {
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.legal-section p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 12px;
+}
+
+@media (max-width: 760px) {
+  .legal-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .legal-nav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .legal-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-nav-label {
+    display: none;
+  }
+
+  .legal-doc,
+  .legal-toc-item {
+    flex: 0 0 auto;
+    height: 36px;
+    line-height: 36px;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,9 @@
+.auth-logo {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 22px;
+  border-radius: 16px;
+  background: var(--accent);
+}

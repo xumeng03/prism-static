@@ -1,0 +1,173 @@
+.api-page {
+  min-height: calc(100vh - 277px);
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+.section {
+  margin-bottom: 42px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.section-head h3 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.section-head p {
+  margin-top: 3px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.api-table tbody td,
+.api-table thead th {
+  padding-inline: 18px;
+}
+
+.api-table {
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--surface-2);
+}
+
+.api-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.api-table thead th {
+  padding-block: 15px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.api-table tbody td {
+  padding-block: 13px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.api-table tbody tr:hover {
+  background: var(--surface-3);
+}
+
+.api-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.g-empty {
+  position: relative;
+  overflow: hidden;
+  padding: 70px 20px;
+  color: var(--text-3);
+  font-size: 14.5px;
+  text-align: center;
+}
+
+.api-table .right { text-align: right; }
+.api-table .muted { color: var(--text-3); }
+
+.api-table .t-acts {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.key-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.key-cell svg {
+  width: 16px;
+  height: 16px;
+}
+
+.scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.scope.read  { background: var(--accent-dim);               color: var(--accent-text); }
+.scope.write  { background: rgba(26, 141, 76, 0.14);         color: var(--green); }
+.scope.delete { background: var(--danger-dim);               color: var(--danger); }
+
+.ep-list {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.ep {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.12s;
+}
+
+.ep:hover       { background: var(--surface-2); }
+.ep:last-child  { border-bottom: none; }
+
+.ep-desc {
+  margin-left: auto;
+  color: var(--text-3);
+  font-size: 13.5px;
+  text-align: right;
+}
+
+.scope-desc {
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ep {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .ep-desc {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+}

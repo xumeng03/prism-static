@@ -1,0 +1,89 @@
+.filter {
+  position: relative;
+}
+
+.filter-trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 14px 0 16px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+}
+
+.filter-trigger:hover,
+.filter.open .filter-trigger {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+.filter-trigger svg {
+    width: 15px;
+    height: 15px;
+    color: var(--text-3);
+}
+
+.filter-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 30;
+    display: none;
+    min-width: 190px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--bg);
+    box-shadow: var(--shadow-lg);
+}
+
+.filter.open .filter-menu {
+    display: block;
+    animation: pop 0.18s ease;
+}
+
+.filter-opt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    color: var(--text-2);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.filter-opt:hover,
+.filter-opt.active {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.filter-opt svg {
+    width: 14px;
+    height: 14px;
+    color: var(--accent-text);
+    opacity: 0;
+}
+
+.filter-opt.active svg {
+    opacity: 1;
+}
+
+@media (max-width: 680px) {
+    .filter-menu {
+        right: 0;
+        left: auto;
+    }
+}

@@ -1,0 +1,79 @@
+.album-detail-page {
+  min-height: calc(100vh - 277px);
+  padding: 48px 0 80px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  margin-bottom: 20px;
+  padding: 0 13px 0 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 0.14s, color 0.14s;
+}
+
+.back-link:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.back-link .ic {
+  display: grid;
+  place-items: center;
+}
+
+.back-link svg {
+  width: 17px;
+  height: 17px;
+}
+
+.mosaic {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-auto-rows: 160px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+/* ─── 批量选择 ─────────────────────────────────────────────── */
+.batchbar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  margin-bottom: 18px;
+  padding: 0 18px;
+  border-radius: 14px;
+  background: var(--accent-dim);
+}
+
+.batchbar.show {
+  display: flex;
+}
+
+.batchbar .cnt {
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+.batchbar .cnt b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tb-spacer {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .mosaic {
+    grid-auto-rows: 130px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

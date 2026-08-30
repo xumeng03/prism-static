@@ -1,0 +1,100 @@
+.footer {
+    height: 225px;
+    border-top: 1px solid var(--line);
+    background: var(--bg-2);
+    transition: background 0.4s ease;
+}
+
+.footer-inner {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 32px 30px;
+}
+
+.f-brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.f-brand .prism-brand {
+    margin-bottom: 14px;
+}
+
+.f-brand p {
+    max-width: 280px;
+    color: var(--text-3);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.f-brand small {
+    margin-top: auto;
+    color: var(--text-3);
+    font-size: 12px;
+}
+
+.f-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.f-social button {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text-2);
+    transition: all 0.15s;
+}
+
+.f-social button:hover {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+.f-social svg {
+    width: 17px;
+    height: 17px;
+}
+
+.f-col h5 {
+    margin-bottom: 15px;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.f-link {
+    display: block;
+    width: 100%;
+    padding: 6px 0;
+    color: var(--text-2);
+    font-size: 13px;
+    font-weight: 400;
+    text-align: left;
+    transition: color 0.15s;
+}
+
+.f-link:hover {
+    color: var(--text);
+}
+
+@media (max-width: 980px) {
+    .footer-inner {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        padding-inline: 20px;
+    }
+}

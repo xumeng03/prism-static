@@ -1,0 +1,259 @@
+.search-page {
+  display: block;
+  min-height: calc(100vh - 277px);
+  padding: 48px 0 80px;
+  animation: fade 0.4s ease;
+}
+
+.search-hero {
+  max-width: 600px;
+  margin: 0 auto 26px;
+  text-align: center;
+}
+
+.search-hero h2 {
+  margin-bottom: 18px;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.search-big {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 10px 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.search-big:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+
+.search-big .ic {
+  flex: 0 0 auto;
+  color: var(--text-3);
+}
+
+.search-big .ic svg {
+  width: 20px;
+  height: 20px;
+}
+
+.search-big input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--text);
+  font-size: 15.5px;
+}
+
+.search-big input::placeholder {
+  color: var(--text-3);
+}
+
+.search-clear {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-3);
+  transition: background 0.15s, color 0.15s;
+}
+
+.search-clear:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.search-clear svg {
+  width: 18px;
+  height: 18px;
+}
+
+.search-suggest {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.search-suggest .s-lbl {
+  align-self: center;
+  margin-right: 2px;
+  color: var(--text-3);
+  font-size: 12.5px;
+}
+
+.s-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 31px;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.s-chip:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.search-meta {
+  margin-bottom: 20px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.search-meta b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.sr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 20px;
+}
+
+.sr-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.sr-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.sr-thumb {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.sr-grad,
+.thumb-noise {
+  position: absolute;
+  inset: 0;
+}
+
+.sr-grad {
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.thumb-noise {
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.30), transparent 46%),
+    radial-gradient(circle at 78% 82%, rgba(0, 0, 0, 0.22), transparent 50%);
+}
+
+.sr-card:hover .sr-grad {
+  transform: scale(1.05);
+}
+
+.sr-type {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.40);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.sr-info {
+  padding: 12px 14px 14px;
+}
+
+.sr-name {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sr-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sr-by {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sr-by > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sr-by svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  color: var(--text-3);
+}
+
+.sr-views {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--text-3);
+}
+
+.sr-views svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-card:hover,
+  .sr-card:hover .sr-grad {
+    transform: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .search-big input {
+    font-size: 16px;
+  }
+}

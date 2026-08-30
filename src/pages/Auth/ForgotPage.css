@@ -1,0 +1,120 @@
+.auth-card h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.auth-card .sub {
+  margin-bottom: 30px;
+  color: var(--text-3);
+  font-size: 16px;
+}
+
+.auth-field {
+  position: relative;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.auth-field .ic {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  color: var(--text-3);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.auth-field .ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.auth-field input {
+  width: 100%;
+  height: 52px;
+  padding: 0 46px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  outline: none;
+  background: var(--surface-2);
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.auth-field input:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.auth-field .toggle-eye {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-3);
+  transform: translateY(-50%);
+}
+
+.auth-warn {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(201, 138, 26, 0.08);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.fp-back {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.fp-back a {
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+/* ── 请查收邮件 结果态：复用 VerifyPage 的布局 ── */
+.verify-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.verify-ic {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+
+.verify-ic svg {
+  width: 26px;
+  height: 26px;
+}
+
+.verify-body h1 {
+  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.verify-body p {
+  margin-bottom: 28px;
+  color: var(--text-3);
+  font-size: 15px;
+  line-height: 1.5;
+}

@@ -1,0 +1,65 @@
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 54px 20px 76px;
+    text-align: center;
+}
+
+.se-visual {
+    position: relative;
+    width: 128px;
+    height: 104px;
+    margin-bottom: 24px;
+}
+
+.se-photo {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 86px;
+    height: 86px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--text-3);
+    transform: translateX(-50%) rotate(-7deg);
+}
+
+.se-photo-back {
+    top: 0;
+    width: 78px;
+    height: 78px;
+    border: none;
+    background: var(--surface-2);
+    box-shadow: none;
+    color: transparent;
+    transform: translateX(-50%) rotate(9deg);
+}
+
+.se-photo-ic svg {
+    width: 34px;
+    height: 34px;
+}
+
+.empty-state b {
+    margin-bottom: 8px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    max-width: 360px;
+    margin-bottom: 22px;
+    color: var(--text-3);
+    font-size: 14.5px;
+    line-height: 1.6;
+}
+
+.se-cta {
+    min-height: 42px;
+}

@@ -1,0 +1,120 @@
+/* 队列条目容器；不同状态通过 qi-${status} 类切换底色/透明度/进度条 */
+.qi {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--surface-2);
+  transition: background 0.2s;
+}
+
+.qi-waiting { opacity: 0.5; }
+.qi-done { background: rgba(26, 141, 76, 0.06); }
+.qi-error { background: rgba(220, 38, 38, 0.05); }
+
+/* 上传中底部滚动进度条动画 */
+@keyframes qi-slide {
+  0%   { left: -35%; }
+  100% { left: 110%; }
+}
+
+.qi-uploading::after {
+  position: absolute;
+  bottom: 0;
+  left: -35%;
+  width: 35%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+  content: "";
+  animation: qi-slide 1.3s ease-in-out infinite;
+}
+
+/* 主体行：缩略图 + 内容 */
+.qi-body {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* 缩略图 */
+.qi-thumb {
+  position: relative;
+  flex: 0 0 42px;
+  overflow: hidden;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.qi-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 右侧内容列 */
+.qi-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* 文件名行 */
+.qi-top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.qi-name {
+  flex: 1;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+
+.qi-name-done { color: var(--green); }
+.qi-name-error { color: var(--danger); }
+
+.qi-top > div {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.qi-del,
+.qi-copy {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--text-3);
+}
+
+.qi-del:hover { background: var(--surface-3); color: var(--danger); }
+.qi-copy:hover { background: var(--surface-3); color: var(--accent); }
+.qi-del svg,
+.qi-copy svg { width: 12px; height: 12px; }
+
+/* 元信息行 */
+.qi-sub {
+  display: flex;
+  align-items: center;
+}
+
+.qi-meta {
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qi-uploading::after { animation: none; }
+}

@@ -1,0 +1,4 @@
+.settings-page {
+  min-height: calc(100vh - 277px);
+  animation: fade 0.4s ease;
+}

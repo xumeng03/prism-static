@@ -1,0 +1,25 @@
+.prism-brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 4px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.prism-brand.inverse {
+  color: #fff;
+}
+
+.prism-brand-mark {
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+}
+
+.prism-brand b {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+

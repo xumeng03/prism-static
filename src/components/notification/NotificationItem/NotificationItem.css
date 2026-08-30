@@ -1,0 +1,140 @@
+.nt-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 76px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: transparent;
+  text-align: left;
+  transition: background 0.15s, transform 0.08s;
+}
+
+.nt-item + .nt-item {
+  margin-top: 4px;
+}
+
+.nt-item:hover {
+  background: var(--surface-2);
+}
+
+.nt-item:active {
+  transform: scale(0.995);
+}
+
+.nt-item.unread {
+  background: var(--accent-dim);
+}
+
+.nt-ic {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.nt-ic svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nt-item.like .nt-ic {
+  background: rgba(255, 92, 119, 0.14);
+  color: #ff5c77;
+}
+
+.nt-item.upload .nt-ic {
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+
+.nt-item.security .nt-ic {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.nt-item.token .nt-ic {
+  background: rgba(26, 141, 76, 0.14);
+  color: var(--green);
+}
+
+.nt-item.storage .nt-ic {
+  background: rgba(201, 138, 26, 0.16);
+  color: #c98a1a;
+}
+
+.nt-item.system .nt-ic {
+  background: rgba(177, 91, 255, 0.14);
+  color: #9b4dff;
+}
+
+.nt-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 5px;
+  padding-right: 8px;
+}
+
+.nt-text {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.nt-time {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+.nt-thumb {
+  position: relative;
+  flex: 0 0 58px;
+  overflow: visible;
+  width: 58px;
+  height: 46px;
+  margin-right: 8px;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.nt-tbadge {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+}
+
+.nt-tbadge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.nt-tbadge-like {
+  background: #ff5c77;
+}
+
+@media (max-width: 640px) {
+  .nt-item {
+    align-items: flex-start;
+  }
+
+  .nt-thumb {
+    display: none;
+  }
+}

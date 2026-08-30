@@ -1,0 +1,104 @@
+.plan-page {
+  min-height: calc(100vh - 277px);
+  padding: 24px 0 80px;
+  animation: fade 0.4s ease;
+}
+
+.mem-head {
+  max-width: 680px;
+  margin: 0 auto 44px;
+  text-align: center;
+}
+
+.mem-head h2 {
+  margin-bottom: 14px;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-weight: 600;
+}
+
+.mem-head > p {
+  max-width: 560px;
+  margin: 0 auto;
+  color: var(--text-2);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.mem-billing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.segmented button {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+
+.segmented button.on {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1080px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.plan-cancel-text {
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mem-current-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px auto 0;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.mem-current-note b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 880px) {
+  .plan-grid {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 760px) {
+  .plan-page {
+    padding: 36px 0 72px;
+  }
+}

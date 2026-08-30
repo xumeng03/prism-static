@@ -1,0 +1,89 @@
+.select {
+  position: relative;
+}
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 16px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  outline: none;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.select.open .select-trigger,
+.select-trigger:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.select-trigger svg {
+  width: 15px;
+  height: 15px;
+  color: var(--text-3);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.select-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: none;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+}
+
+.select.open .select-menu {
+  display: block;
+  animation: pop 0.18s ease;
+}
+
+.select-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.select-opt:hover,
+.select-opt.active {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.select-opt svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-text);
+  opacity: 0;
+}
+
+.select-opt.active svg {
+  opacity: 1;
+}

@@ -1,0 +1,14 @@
+/* 原图覆盖层：绝对定位铺满外层容器，初始透明，加载完成后淡入 */
+.pi-orig {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.pi-orig.loaded {
+  opacity: 1;
+}

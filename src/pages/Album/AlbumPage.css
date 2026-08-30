@@ -1,0 +1,74 @@
+.albums-page {
+    min-height: calc(100vh - 277px);
+    padding: 48px 0 80px;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.album-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px dashed var(--line-2);
+  background: transparent;
+  color: var(--text-3);
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.album-new:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  box-shadow: none;
+  color: var(--accent-text);
+  transform: none;
+}
+
+.album-new .ic {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-3);
+}
+
+.album-new .ic svg {
+  width: 22px;
+  height: 22px;
+}
+
+.album-new b {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.album-new span {
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+.album-card {
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 274px;
+  display: flex;
+  flex-direction: column;
+}
+
+.album-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}

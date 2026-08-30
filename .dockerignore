@@ -1,0 +1,26 @@
+# 依赖与构建产物：容器内由 npm ci / npm run build 重新生成
+node_modules
+dist
+dist-ssr
+
+# 版本控制与编辑器
+.git
+.gitignore
+.idea
+.vscode
+.DS_Store
+
+# 本地会话与记忆文件，与构建无关
+.remember
+.claude
+
+# 环境变量文件：只打包 .env.production（生产 API 地址，构建时内联进产物）；
+# 排除开发/本地/密钥类文件，避免泄露
+.env
+.env.development
+.env.local
+.env.*.local
+
+# 日志与杂项
+*.log
+*.dmg
