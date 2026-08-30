@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # ---- 运行阶段：用轻量 Nginx 镜像托管静态文件 ----
-FROM nginx:1.30-alpine
+FROM nginx:1.27-alpine
 # 将构建产物复制到 Nginx 默认静态目录
 COPY --from=builder /app/dist /usr/share/nginx/html
 # 使用自定义 Nginx 配置（支持前端路由 fallback）
