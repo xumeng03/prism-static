@@ -26,7 +26,7 @@ const instance = axios.create({
 // ─── 读取当前语言 ─────────────────────────────────────────────────────────────
 const readLanguage = () => {
     const lang = localStorage.getItem('prism-lang')
-    return lang === 'zh-CN' ? 'zh-CN' : 'en'
+    return lang === 'en' ? 'en' : 'zh-CN'
 }
 
 // 模块级翻译函数：拦截器不在 React 组件内，无法调用 useTranslation Hook，

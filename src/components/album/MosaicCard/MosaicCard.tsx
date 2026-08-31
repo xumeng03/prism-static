@@ -5,7 +5,7 @@ import {Icon} from '@/components/common/icon/Icon'
 import type {GalleryItem} from '@/types/explore'
 
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
-import {formatSize} from '@/utils/format'
+import {formatSize, formatDimension} from '@/utils/format'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './MosaicCard.css'
@@ -30,7 +30,7 @@ export function MosaicCard({item, big, selected, onOpen, onToggleSelect}: Mosaic
             <div className="mo-shade"/>
             <div className="mo-foot">
                 <span className="mo-name">{item.title}</span>
-                <span className="mo-sub">{item.type.toUpperCase()} / {formatSize(item.size)} / {item.dim}</span>
+                <span className="mo-sub">{item.type.toUpperCase()} / {formatSize(item.size)} / {formatDimension(item.width, item.height)}</span>
             </div>
             <button
                 className="g-check"

@@ -28,7 +28,7 @@ import type {GalleryItem} from '@/types/explore'
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
 import {clipboard} from '@/utils/clipboard'
 import {downloadImage} from '@/utils/download'
-import {formatSize, formatNumber} from '@/utils/format'
+import {formatSize, formatNumber, formatDimension} from '@/utils/format'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './ExploreDetail.css'
@@ -111,7 +111,7 @@ export default function ExploreDetail() {
                         <h2 className="ei-card-title">{item.title}</h2>
                         <div className="ei-detail-row">
                             <span className="ei-detail-k">{t('尺寸', 'Dimensions')}</span>
-                            <span className="ei-detail-v">{item.dim || '—'}</span>
+                            <span className="ei-detail-v">{formatDimension(item.width, item.height)}</span>
                         </div>
                         <div className="ei-detail-row">
                             <span className="ei-detail-k">{t('大小', 'Size')}</span>

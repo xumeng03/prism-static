@@ -19,7 +19,7 @@ import type {GalleryItem} from '@/types/explore'
 
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
 import {downloadImage} from '@/utils/download'
-import {formatSize, formatNumber} from '@/utils/format'
+import {formatSize, formatNumber, formatDimension} from '@/utils/format'
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 import {deleteImage} from '@/api/libraryApi'
@@ -149,7 +149,7 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
                         <div className="idm-details">
                             <div className="idm-detail-row">
                                 <span className="idm-detail-k">{t('尺寸', 'Dimensions')}</span>
-                                <span className="idm-detail-v">{item.dim || '—'}</span>
+                                <span className="idm-detail-v">{formatDimension(item.width, item.height)}</span>
                             </div>
                             <div className="idm-detail-row">
                                 <span className="idm-detail-k">{t('大小', 'Size')}</span>
@@ -165,7 +165,7 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
                             </div>
                             <div className="idm-detail-row">
                                 <span className="idm-detail-k">{t('哈希', 'Hash')}</span>
-                                <span className="idm-detail-v">{item.hash ? item.hash.slice(0, 16) + '…' : '—'}</span>
+                                <span className="idm-detail-v">{item.hash ? `sha256:${item.hash.slice(0, 16)}…` : '—'}</span>
                             </div>
                         </div>
 

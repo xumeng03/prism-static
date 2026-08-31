@@ -7,9 +7,7 @@
 /* ─── Layout: left image + right sidebar ──────────────────── */
 .ei-layout {
   display: flex;
-  align-items: stretch;
-  /* 至少撑满 main（100vh − header 52 − footer 225），否则横图偏矮时底部会留白 */
-  min-height: calc(100vh - 277px);
+  align-items: flex-start;
   padding: 32px 48px 32px 48px;
   gap: 32px;
 }
@@ -19,22 +17,23 @@
   flex: 1 1 0;
   min-width: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
 /* 缩略图 + 原图的外层容器：relative 让原图绝对定位覆盖在缩略图上，尺寸由缩略图决定 */
 .ei-img-wrap {
   position: relative;
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .ei-img {
   display: block;
-  /* 高度按视口算：52px header + 布局上下各 32px padding，否则竖屏图会撑出屏幕 */
-  max-width: 100%;
-  max-height: calc(100vh - 116px);
+  width: 100%;
+  height: auto;
   object-fit: contain;
   border-radius: 8px;
 }

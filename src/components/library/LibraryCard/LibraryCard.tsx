@@ -5,7 +5,7 @@ import {Icon} from '@/components/common/icon/Icon'
 import type {GalleryItem} from '@/types/explore'
 
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
-import {formatSize} from '@/utils/format'
+import {formatSize, formatDimension} from '@/utils/format'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './LibraryCard.css'
@@ -30,7 +30,7 @@ export function LibraryCard({item, selected, onOpen, onToggleSelect}: LibraryCar
             <div className="g-card-info">
                 <span className="g-card-name" title={item.title}>{item.title}</span>
                 <div className="g-card-meta">
-                    <span className="g-card-size">{item.type?.toUpperCase() ?? '—'} · {formatSize(item.size)} · {item.dim}</span>
+                    <span className="g-card-size">{item.type?.toUpperCase() ?? '—'} · {formatSize(item.size)} · {formatDimension(item.width, item.height)}</span>
                 </div>
             </div>
             <button

@@ -55,3 +55,8 @@ export function formatMonth(key: string, t: (zh: string, en: string) => string) 
     const en = d.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})
     return t(`${year}年${Number(month)}月`, en)
 }
+
+// 将宽高拼接为分辨率字符串：(1920, 1080) → "1920×1080"
+export function formatDimension(width: number, height: number) {
+    return `${width}×${height}`
+}

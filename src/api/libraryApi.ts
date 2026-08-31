@@ -12,11 +12,12 @@ export function updateImageStats(id: number, action: ImageAction) {
     void post(`/image/stats/${id}`, {action})
 }
 
-// 点赞/取消点赞：后端已拆分为独立接口，不再复用 stats 通用接口
+// 点赞图片
 export function likeImage(id: number) {
     return post(`/image/like/${id}`)
 }
 
+// 取消点赞图片
 export function unlikeImage(id: number) {
     return post(`/image/unlike/${id}`)
 }
@@ -26,19 +27,22 @@ export function getFavorites(): Promise<ApiResponse<number[]>> {
     return get<ApiResponse<number[]>>('/image/favorites')
 }
 
-// 获取存储用量统计，展示在图库页面头部
+// 获取图库存储用量统计
 export function getLibraryStats(): Promise<ApiResponse<LibraryStats>> {
     return get<ApiResponse<LibraryStats>>('/library/stats')
 }
 
+// 获取当前用户的相册列表
 export function getAlbums(): Promise<ApiResponse<AlbumOption[]>> {
     return get<ApiResponse<AlbumOption[]>>('/album')
 }
 
+// 根据 id 获取单张图片详情
 export function getImage(id: number): Promise<ApiResponse<GalleryItem>> {
     return get<ApiResponse<GalleryItem>>(`/image/${id}`)
 }
 
+// 分页获取图库图片列表，支持按相册、类型、关键词筛选和排序
 export function getLibraryImages(params: LibraryQuery): Promise<ApiResponse<LibraryResult>> {
     const {album, type, sort, q, page, pageSize} = params
     return get<ApiResponse<LibraryResult>>('/library', {
@@ -52,17 +56,17 @@ export function getLibraryImages(params: LibraryQuery): Promise<ApiResponse<Libr
     })
 }
 
-// 永久删除单张图片，操作不可撤销
+// 删除单张图片
 export function deleteImage(id: number): Promise<ApiResponse<null>> {
     return post<ApiResponse<null>>(`/image/delete/${id}`)
 }
 
-// 批量删除图片
+// 批量删除多张图片
 export function batchDeleteImages(ids: number[]): Promise<ApiResponse<null>> {
     return post<ApiResponse<null>>('/image/batch/delete', {ids})
 }
 
-// 获取图片下载地址
+// 获取图片下载 URL
 export function getDownloadUrl(id: number): Promise<ApiResponse<{ url: string }>> {
     return get<ApiResponse<{ url: string }>>(`/image/download/${id}`)
 }
