@@ -195,7 +195,7 @@ export function Header() {
                             </button>
                             <button className="am-item" type="button" onClick={() => {
                                 setMenuOpen(false)
-                                navigate('/plan')
+                                navigate('/pricing')
                             }}>
                                 <span className="ic"><Icon name="sparkle"/></span>
                                 <span>{t('修改计划', 'Change plan')}</span>

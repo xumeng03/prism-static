@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from 'react'
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
 import {SessionItem} from '@/components/account/SessionItem/SessionItem'
 import {Button} from '@/components/common/button/Button'
-import {PasswordInput} from '@/components/common/passwordInput/PasswordInput'
+import {Icon} from '@/components/common/icon/Icon'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'
@@ -37,6 +37,11 @@ export function SecuritySection() {
     const [currentPassword, setCurrentPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+
+    // 三个密码框各自的明文/密文切换开关（原 PasswordInput 组件内部管理，内联后由父组件维护）
+    const [showCurrent, setShowCurrent] = useState(false)
+    const [showNew, setShowNew] = useState(false)
+    const [showConfirm, setShowConfirm] = useState(false)
 
     const savePassword = async () => {
         if (!currentPassword || !newPassword || !confirmPassword) {
@@ -78,19 +83,43 @@ export function SecuritySection() {
                 </div>
                 <div className="field">
                     <label>{t('当前密码', 'Current password')}</label>
-                    <PasswordInput value={currentPassword} onChange={setCurrentPassword}
-                                   placeholder={t('输入当前密码', 'Enter current password')}/>
+                    <div className="pw-field">
+                        <input className="input"
+                               type={showCurrent ? 'text' : 'password'}
+                               value={currentPassword}
+                               placeholder={t('输入当前密码', 'Enter current password')}
+                               onChange={(e) => setCurrentPassword(e.target.value)}/>
+                        <button type="button" className="pw-eye" onClick={() => setShowCurrent((v) => !v)}>
+                            <Icon name={showCurrent ? 'eye-close' : 'eye-open'}/>
+                        </button>
+                    </div>
                 </div>
                 <div className="set-grid">
                     <div className="field">
                         <label>{t('新密码', 'New password')}</label>
-                        <PasswordInput value={newPassword} onChange={setNewPassword}
-                                       placeholder={t('输入新密码', 'Enter new password')}/>
+                        <div className="pw-field">
+                            <input className="input"
+                                   type={showNew ? 'text' : 'password'}
+                                   value={newPassword}
+                                   placeholder={t('输入新密码', 'Enter new password')}
+                                   onChange={(e) => setNewPassword(e.target.value)}/>
+                            <button type="button" className="pw-eye" onClick={() => setShowNew((v) => !v)}>
+                                <Icon name={showNew ? 'eye-close' : 'eye-open'}/>
+                            </button>
+                        </div>
                     </div>
                     <div className="field">
                         <label>{t('确认新密码', 'Confirm new password')}</label>
-                        <PasswordInput value={confirmPassword} onChange={setConfirmPassword}
-                                       placeholder={t('再次输入新密码', 'Re-enter new password')}/>
+                        <div className="pw-field">
+                            <input className="input"
+                                   type={showConfirm ? 'text' : 'password'}
+                                   value={confirmPassword}
+                                   placeholder={t('再次输入新密码', 'Re-enter new password')}
+                                   onChange={(e) => setConfirmPassword(e.target.value)}/>
+                            <button type="button" className="pw-eye" onClick={() => setShowConfirm((v) => !v)}>
+                                <Icon name={showConfirm ? 'eye-close' : 'eye-open'}/>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="acct-save acct-save-inline">

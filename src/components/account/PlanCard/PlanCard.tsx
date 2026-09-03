@@ -22,7 +22,8 @@ interface PlanCardProps {
     // 计费说明文案（由父组件按 billing/语言生成），免费方案不显示
     billingNote: string
     // 用户当前所在套餐 key，用于高亮卡片与禁用降级/当前按钮
-    currentPlanKey: PlanKey
+    // null 表示未登录：不高亮任何卡片，所有非免费方案都显示升级 CTA
+    currentPlanKey: PlanKey | null
     // 是否正在跳转支付，true 时 CTA 显示"跳转中..."
     subscribing: boolean
     // 点击升级按钮的回调，参数为被点击的套餐
@@ -61,14 +62,16 @@ export function PlanCard({plan, billing, billingNote, currentPlanKey, subscribin
                     : <p className="plan-note">{t('永久免费', 'Forever free')}</p>}
             </div>
 
-            {/* ─── CTA 按钮：三路分支 ──────────────────────────────────────── */}
+            {/* ─── CTA 按钮：三路分支 ────────────────────────────────────────
+                currentPlanKey === null（未登录）时，前两个"当前方案 / 已包含"分支都不成立，
+                会落到最后的升级 CTA，符合"游客不高亮任何方案"的预期 */}
             {plan.key === currentPlanKey ? (
                 // 当前方案：禁用按钮，表示已在此方案
                 <button className="btn btn-secondary plan-cta is-current" disabled type="button">
                     <span className="ic"><Icon name="check"/></span>
                     <span>{t('当前方案', 'Your current plan')}</span>
                 </button>
-            ) : PLAN_RANK[plan.key] < PLAN_RANK[currentPlanKey] ? (
+            ) : currentPlanKey && PLAN_RANK[plan.key] < PLAN_RANK[currentPlanKey] ? (
                 // 低于当前方案（降级方向）：禁用，内容已包含在现有方案中
                 <button className="btn btn-secondary plan-cta is-current" disabled type="button">
                     <span className="ic"><Icon name="check"/></span>

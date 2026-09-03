@@ -1,4 +1,4 @@
-.plan-page {
+.pricing-page {
   min-height: calc(100vh - 277px);
   padding: 24px 0 80px;
   animation: fade 0.4s ease;
@@ -98,7 +98,7 @@
 }
 
 @media (max-width: 760px) {
-  .plan-page {
+  .pricing-page {
     padding: 36px 0 72px;
   }
 }

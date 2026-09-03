@@ -11,10 +11,14 @@ export const PLANS: Plan[] = [
         tagEn: 'For getting started',
         monthly: 0,
         annual: 0,
-        badgeZh: '当前',
-        badgeEn: 'Current',
-        ctaZh: '包含在你的账户中',
-        ctaEn: 'Included in your account',
+        // badge 描述"方案属性"而非"状态"，与 Pro=推荐 / Studio=旗舰 保持同一维度；
+        // 状态类文案（当前方案 / 已包含）由 PlanCard 按 currentPlanKey 动态渲染，不放这里
+        badgeZh: '入门',
+        badgeEn: 'Starter',
+        // 兜底 CTA：游客点击进入注册流程（handleUpgrade 里对游客统一跳登录页）；
+        // 已登录用户在 Free 卡片上永远走"当前方案 / 已包含"分支，不会触达这段文案
+        ctaZh: '免费开始',
+        ctaEn: 'Get started free',
         features: [
             {zh: '5 GB 存储空间', en: '5 GB storage'},
             {zh: '单张最大 10 MB', en: 'Up to 10 MB per file'},

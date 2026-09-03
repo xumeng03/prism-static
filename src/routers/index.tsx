@@ -100,6 +100,16 @@ export const router = createBrowserRouter([
                     }
                 }
             },
+            {
+                // 定价页，公开可访问：PayPal 商户要求「明确的定价页」不能在登录墙后面，
+                path: 'pricing',
+                lazy: async () => {
+                    const component = await import('@/pages/Pricing/PricingPage');
+                    return {
+                        Component: component.default
+                    }
+                }
+            },
 
             // ── 需要登录的路由（无 token 时 loader 重定向到 /sign-in） ──────────
             {
@@ -158,16 +168,6 @@ export const router = createBrowserRouter([
                 loader: requireAuth,
                 lazy: async () => {
                     const component = await import('@/pages/Account/Token/TokenPage.tsx');
-                    return {
-                        Component: component.default
-                    }
-                }
-            },
-            {
-                path: 'plan',
-                loader: requireAuth,
-                lazy: async () => {
-                    const component = await import('@/pages/Account/Plan/PlanPage.tsx');
                     return {
                         Component: component.default
                     }

@@ -29,7 +29,7 @@ const FOOTER_COLS: FooterCol[] = [
             {zh: '探索', en: 'Explore', to: '/'},
             {zh: '图库', en: 'Library', to: '/library'},
             {zh: '相册', en: 'Albums', to: '/album'},
-            {zh: '价格', en: 'Pricing', to: '/plan'},
+            {zh: '价格', en: 'Pricing', to: '/pricing'},
         ],
     },
     {

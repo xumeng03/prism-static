@@ -1,5 +1,8 @@
 // ─── React 核心 ───────────────────────────────────────────────────────────────
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
+
+// ─── 第三方：路由 ─────────────────────────────────────────────────────────────
+import {useNavigate, useSearchParams} from 'react-router-dom'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
 import {Modal} from '@/components/common/modal/Modal'
@@ -23,17 +26,22 @@ import type {BillingMode, Plan, PlanKey} from '@/types/plan'
 import {PLANS} from '@/constants/plans'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
-import './PlanPage.css'
+import './PricingPage.css'
 
-export default function PlanPage() {
+export default function PricingPage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
     const t = useTranslation()
+    // nav('/path') — 未登录访客点击升级时跳转登录页
+    const nav = useNavigate()
+    // PayPal 回跳到 /pricing?status=success|cancelled，由 useSearchParams 读取；setSearchParams 用于处理完清 query
+    const [searchParams, setSearchParams] = useSearchParams()
     // 计费周期；初始 'monthly' 是定价页的常规默认视图，年付为折扣选项
     const [billing, setBilling] = useState<BillingMode>('monthly')
     const {user, setUser} = useAuthStore()
     // 将 store 中的 plan 字符串（如 "Pro"）统一转小写再断言为 PlanKey，免去大小写不一致的判断
-    // 路由层已拦截未登录访问，故 user 在此组件内可视为非空，fallback 'free' 仅作防御
-    const currentPlanKey = (user?.plan.toLowerCase() ?? 'free') as PlanKey
+    // 定价页对未登录用户开放（PayPal 合规要求）；user 为空时 currentPlanKey = null，
+    // 由 PlanCard 判定为"没有当前方案"，所有卡片都展示升级 CTA、不高亮任何一张
+    const currentPlanKey: PlanKey | null = user ? (user.plan.toLowerCase() as PlanKey) : null
 
     // billing 或语言切换时重新生成计费说明文案；t 引用在语言切换时会变化，因此需要列为依赖
     const billingNote = useMemo(
@@ -50,8 +58,42 @@ export default function PlanPage() {
     // 取消订阅请求进行中，防止重复提交
     const [cancelling, setCancelling] = useState(false)
 
+    // ── PayPal 回跳态处理 ─────────────────────────────────────────────────────
+    // 页面首次加载时若带有 ?status=success|cancelled，触发对应 toast 并清掉 query
+    // useRef 防止 React 18 StrictMode 下的双次执行 / 语言切换重执行
+    const statusHandledRef = useRef(false)
+    useEffect(() => {
+        if (statusHandledRef.current) return
+        const status = searchParams.get('status')
+        if (!status) return
+        statusHandledRef.current = true
+
+        if (status === 'success') {
+            toast.success(t('订阅成功，欢迎升级！', 'Subscription successful. Welcome!'))
+            // 支付成功后需要重拉 Me 同步 store 中的 plan/expires_at；未登录访客理论上不会走到这里
+            getMe().then(res => {
+                if (res.code === 200) setUser(res.data)
+            })
+        } else if (status === 'cancelled') {
+            toast.info(t('订阅已取消！', 'Subscription cancelled!'))
+        }
+
+        // 移除 status query，避免刷新 / 分享时重复触发 toast
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev)
+            next.delete('status')
+            return next
+        }, {replace: true})
+    }, [searchParams, setSearchParams, setUser, t])
+
     // handleUpgrade：按当前计费周期创建订阅，成功后跳转支付页
     const handleUpgrade = async (plan: Plan) => {
+        // 定价页对游客开放，但下单需要登录态：未登录时提示并跳转登录页
+        if (!user) {
+            toast.info(t('请先登录后再升级方案', 'Please sign in to upgrade your plan'))
+            nav('/sign-in')
+            return
+        }
         setSubscribing(true)
         try {
             const billingValue = billing === 'annual' ? 'year' : 'month'
@@ -89,7 +131,7 @@ export default function PlanPage() {
     }
 
     return (
-        <section className="plan-page">
+        <section className="pricing-page">
             {/* ─── 页面标题 + 计费周期切换 ──────────────────────────────────── */}
             <div className="mem-head">
                 <h2>{t('选择适合你的方案', 'Pick the plan that fits')}</h2>
