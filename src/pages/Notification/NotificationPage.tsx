@@ -21,6 +21,7 @@ import {
 import type {NotificationData} from '@/types/notification'
 
 // ─── 状态管理 ─────────────────────────────────────────────────────────────────
+import {useI18nStore} from '@/store/i18nStore'
 import {useNotificationStore} from '@/store/notificationStore'
 import {toast} from '@/store/toastStore'
 
@@ -33,6 +34,8 @@ import './NotificationPage.css'
 export default function NotificationPage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
     const t = useTranslation()
+    // 订阅当前语言：后端按 Accept-Language 返回本地化通知内容，切换语言需要重新拉取
+    const language = useI18nStore((s) => s.language)
     // 更新全局未读标记，让 Header 的红点徽标随已读操作实时同步
     const {setHasUnread} = useNotificationStore()
 
@@ -56,10 +59,12 @@ export default function NotificationPage() {
         }).finally(() => setLoading(false))
     }
 
-    // 触发时机：组件挂载时拉取一次通知列表，空依赖数组确保只执行一次
+    // 触发时机：组件挂载 + 语言切换时拉取通知列表
+    // 用户在页面上切语言时需要重新拉取，否则显示的仍是切换前语言的旧文案，加入 language 依赖是因为后端会按当前 Accept-Language 返回本地化的标题/内容，
     useEffect(() => {
         fetchNotifications()
-    }, [])
+        // fetchNotifications 只依赖 setState 等稳定引用，故意不列入依赖，避免每次渲染重跑
+    }, [language])
 
     // 分组元数据：key 与本地化标题；用 useMemo 缓存，避免每次渲染重建数组
     const groups = useMemo(() => [

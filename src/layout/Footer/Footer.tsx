@@ -88,8 +88,8 @@ export function Footer() {
                     {/* Brand 组件点击跳回首页 */}
                     <Brand onClick={() => navigate('/')}/>
                     <p>{t(
-                        '为创作者与开发者打造的现代图片托管平台。上传、管理、分享，一切尽在掌握。',
-                        'Modern image hosting for creators and developers. Upload, manage, and share with ease.'
+                        '为创作者与开发者打造的现代图片托管平台，轻松上传、管理与分享。',
+                        'Modern image hosting for creators and developers — upload, manage, share.'
                     )}</p>
                     <div className="f-social">
                         {/* 社交平台链接均未上线，故意不传 to 参数，触发 openLink 的 coming soon 分支 */}
