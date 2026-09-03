@@ -3,7 +3,7 @@
 import {get, post, type ApiResponse} from '@/utils/http'
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
-import type {SignInForm, SignUpForm, TokenData, User} from '@/types/auth'  // type-only，编译后完全擦除
+import type {SignInForm, SignUpForm, ResetPasswordForm, TokenData, User} from '@/types/auth'  // type-only，编译后完全擦除
 
 // 注册成功后提示验证邮箱
 export function signUp(data: SignUpForm): Promise<ApiResponse<null>> {
@@ -41,11 +41,7 @@ export function forgotPassword(email: string): Promise<ApiResponse<null>> {
     return post<ApiResponse<null>>('/auth/password/forgot', {email})
 }
 
-// 重置密码：携带一次性 token 与两次新密码；成功后后端吊销该用户所有会话
-export function resetPassword(data: {
-    token: string
-    new_password: string
-    confirm_password: string
-}): Promise<ApiResponse<null>> {
+// 重置密码：携带邮箱 + 一次性 token + 两次新密码；成功后后端吊销该用户所有会话
+export function resetPassword(data: ResetPasswordForm): Promise<ApiResponse<null>> {
     return post<ApiResponse<null>>('/auth/password/reset', data)
 }

@@ -29,6 +29,8 @@ import {STATS} from '@/constants/stat'
 import './ExplorePage.css'
 
 const PAGE_SIZE = 48;
+// 列表硬上限：单个类目累计加载超过此数量后停止翻页，避免长时间浏览时 items 数组无限增长
+const MAX_ITEMS = 200;
 
 // 模块级缓存：导航到详情页返回后恢复列表，避免重新加载 + 丢失滚动位置
 let _galleryCache: { items: GalleryItem[]; loading: boolean; hasMore: boolean } | null = null
@@ -122,6 +124,8 @@ export function ExplorePage() {
         const observer = new IntersectionObserver((entries) => {
             // isIntersecting = 哨兵进入视口；正在加载或没有更多时不触发
             if (!entries[0].isIntersecting || gallery.loading || !gallery.hasMore) return
+            // 已达列表硬上限，视为到底，不再翻页
+            if (gallery.items.length >= MAX_ITEMS) return
             const nextPage = pageRef.current + 1
             setGallery(d => {
                 d.loading = true
@@ -140,7 +144,7 @@ export function ExplorePage() {
         }, {rootMargin: '100px'}) // 提前 50px 触发，让加载更流畅
         observer.observe(sentinel)
         return () => observer.disconnect() // cleanup：依赖变化或组件卸载时断开监听
-    }, [gallery.loading, gallery.hasMore, activeCategory, setGallery])
+    }, [gallery.loading, gallery.hasMore, gallery.items.length, activeCategory, setGallery])
 
     return (
         <>

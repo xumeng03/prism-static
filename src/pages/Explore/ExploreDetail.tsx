@@ -44,6 +44,8 @@ export default function ExploreDetail() {
 
     // 当前图片数据，初始 null 表示尚未加载
     const [item, setItem] = useState<GalleryItem | null>(null)
+    // 加载状态：true 表示正在请求详情，避免刷新时先闪现"信息不可用"再切换到真实内容
+    const [loading, setLoading] = useState(true)
     // 从 favoritesStore 读取当前图片是否已收藏；item?.id ?? -1 防止 null 时报错
     const liked = useFavoritesStore((s) => s.favorites.has(item?.id ?? -1))
     const toggleLike = useFavoritesStore((s) => s.toggleFavorite)
@@ -56,25 +58,46 @@ export default function ExploreDetail() {
         const imageId = Number(id)
         // getImage 前先调用 updateImageStats('view')，保证每次打开详情页都计入一次浏览
         updateImageStats(imageId, 'view')
-        getImage(imageId).then((res: ApiResponse<GalleryItem>) => {
-            setItem(res.data)
-        })
+        getImage(imageId)
+            .then((res: ApiResponse<GalleryItem>) => {
+                setItem(res.data)
+            })
+            .finally(
+                () => setLoading(false)
+            )
     }, [id])
 
-    // 数据未就绪时展示空状态占位，避免渲染不完整的详情页
+    // 加载中：显示旋转指示器，与 ExplorePage 保持一致的视觉语言
+    // 外层套 .ei-placeholder 撑起 60vh 高度，避免加载完成时高度骤变造成的闪动
+    if (loading) {
+        return (
+            <section className="ei-page">
+                <div className="ei-placeholder">
+                    <div className="feed-loader">
+                        <div className="spinner"/>
+                        <span>{t('拼命加载中...', 'Loading...')}</span>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    // 加载完成但数据仍为空：图片确实不存在或已被删除
     if (!item) {
         return (
             <section className="ei-page">
-                <Empty
-                    icon={<Icon name="image"/>}
-                    title={t('图片信息不可用', 'Image info not available')}
-                    message={t('该图片可能已被删除或链接无效', 'This image may have been deleted or the link is invalid')}
-                    action={
-                        <Button onClick={() => nav('/')} variant="secondary">
-                            {t('返回首页', 'Back to home')}
-                        </Button>
-                    }
-                />
+                <div className="ei-placeholder">
+                    <Empty
+                        icon={<Icon name="image"/>}
+                        title={t('图片信息不可用', 'Image info not available')}
+                        message={t('该图片可能已被删除或链接无效', 'This image may have been deleted or the link is invalid')}
+                        action={
+                            <Button onClick={() => nav('/')} variant="secondary">
+                                {t('返回首页', 'Back to home')}
+                            </Button>
+                        }
+                    />
+                </div>
             </section>
         )
     }

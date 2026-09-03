@@ -19,35 +19,11 @@ import {toast} from '@/store/toastStore'
 // ─── API ──────────────────────────────────────────────────────────────────────
 import {forgotPassword, resetPassword} from '@/api/authApi'
 
+// ─── 类型 ─────────────────────────────────────────────────────────────────────
+import type {ResetPasswordForm} from '@/types/auth'
+
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './ForgotPage.css'
-
-// ─── 页内组件 ─────────────────────────────────────────────────────────────────
-// 密码输入框（带眼睛切换）：重置表单里「新密码」与「确认新密码」结构一致，抽出来复用
-interface PasswordFieldProps {
-    placeholderZh: string
-    placeholderEn: string
-    value: string
-    visible: boolean
-    onToggle: () => void
-    onChange: (value: string) => void
-}
-
-function PasswordField({placeholderZh, placeholderEn, value, visible, onToggle, onChange}: PasswordFieldProps) {
-    const t = useTranslation()
-    return (
-        <div className="auth-field auth-pw">
-            <span className="ic"><Icon name="lock"/></span>
-            <input type={visible ? 'text' : 'password'}
-                   placeholder={t(placeholderZh, placeholderEn)}
-                   value={value}
-                   onChange={(e) => onChange(e.target.value)}/>
-            <button type="button" className="toggle-eye" onClick={onToggle}>
-                <Icon name={visible ? 'eye-close' : 'eye-open'}/>
-            </button>
-        </div>
-    )
-}
 
 export function ForgotPage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
@@ -57,7 +33,7 @@ export function ForgotPage() {
 
     // 读取 URL 查询参数：token 有值时进入「设置新密码」流程；email 从登录页带过来用于预填
     const [searchParams] = useSearchParams()
-    const token = searchParams.get('token')
+    const presetToken = searchParams.get('token')
     const presetEmail = searchParams.get('email')
 
     // UI 状态：发送中、已发送、重置中、密码可见性、行内报错
@@ -69,8 +45,13 @@ export function ForgotPage() {
         showConfirmPassword: false,
         error: null as string | null,
     })
-    // 表单数据：email 用于请求重置邮件（初始值取自 query 的 email）；newPassword / confirmPassword 用于设置新密码
-    const [form, setForm] = useImmer({email: presetEmail ?? '', newPassword: '', confirmPassword: ''})
+    // 表单数据：token（从 query 预填）用于切换重置流程 + 提交；email 用于请求重置邮件与重置校验；newPassword / confirmPassword 用于设置新密码
+    const [form, setForm] = useImmer<ResetPasswordForm>({
+        token: presetToken ?? '',
+        email: presetEmail ?? '',
+        newPassword: '',
+        confirmPassword: '',
+    })
 
     // 业务错误双通道提示：auth-warn 表单内持久 + toast 顶部瞬态
     const showError = (msg: string) => {
@@ -109,10 +90,10 @@ export function ForgotPage() {
             showError(t('两次密码不一致', 'Passwords do not match'))
             return
         }
-        if (!token) return
+        if (!form.token) return
         try {
             setState(d => { d.resetting = true; d.error = null })
-            const res = await resetPassword({token, new_password: form.newPassword, confirm_password: form.confirmPassword})
+            const res = await resetPassword(form)
             if (res.code !== 200) {
                 showError(res.message)
                 return
@@ -143,13 +124,13 @@ export function ForgotPage() {
             ) : (
                 <>
                     <div>
-                        <h1>{token ? t('重置密码', 'Reset password') : t('忘记密码', 'Forgot password')}</h1>
-                        <p className="sub">{token ? t('请为你的账号设置一个新密码', 'Set a new password for your account') : t('输入注册邮箱，我们将发送重置链接', 'Enter your email and we\'ll send a reset link')}</p>
+                        <h1>{form.token ? t('重置密码', 'Reset password') : t('忘记密码', 'Forgot password')}</h1>
+                        <p className="sub">{form.token ? t('请为你的账号设置一个新密码', 'Set a new password for your account') : t('输入注册邮箱，我们将发送重置链接', 'Enter your email and we\'ll send a reset link')}</p>
                     </div>
 
                     <form onSubmit={(e) => {
                         e.preventDefault()
-                        if (token) {
+                        if (form.token) {
                             void handleReset()
                         } else {
                             void handleForgot()
@@ -159,18 +140,30 @@ export function ForgotPage() {
                             <p className="auth-warn">{state.error}</p>
                         )}
 
-                        {token ? (
+                        {form.token ? (
                             <>
-                                <PasswordField
-                                    placeholderZh="新密码" placeholderEn="New password"
-                                    value={form.newPassword} visible={state.showPassword}
-                                    onToggle={() => setState(d => { d.showPassword = !d.showPassword })}
-                                    onChange={(value) => setForm(d => { d.newPassword = value })}/>
-                                <PasswordField
-                                    placeholderZh="确认新密码" placeholderEn="Confirm new password"
-                                    value={form.confirmPassword} visible={state.showConfirmPassword}
-                                    onToggle={() => setState(d => { d.showConfirmPassword = !d.showConfirmPassword })}
-                                    onChange={(value) => setForm(d => { d.confirmPassword = value })}/>
+                                <div className="auth-field auth-pw">
+                                    <span className="ic"><Icon name="lock"/></span>
+                                    <input type={state.showPassword ? 'text' : 'password'}
+                                           placeholder={t('新密码', 'New password')}
+                                           value={form.newPassword}
+                                           onChange={(e) => setForm(d => { d.newPassword = e.target.value })}/>
+                                    <button type="button" className="toggle-eye"
+                                            onClick={() => setState(d => { d.showPassword = !d.showPassword })}>
+                                        <Icon name={state.showPassword ? 'eye-close' : 'eye-open'}/>
+                                    </button>
+                                </div>
+                                <div className="auth-field auth-pw">
+                                    <span className="ic"><Icon name="lock"/></span>
+                                    <input type={state.showConfirmPassword ? 'text' : 'password'}
+                                           placeholder={t('确认新密码', 'Confirm new password')}
+                                           value={form.confirmPassword}
+                                           onChange={(e) => setForm(d => { d.confirmPassword = e.target.value })}/>
+                                    <button type="button" className="toggle-eye"
+                                            onClick={() => setState(d => { d.showConfirmPassword = !d.showConfirmPassword })}>
+                                        <Icon name={state.showConfirmPassword ? 'eye-close' : 'eye-open'}/>
+                                    </button>
+                                </div>
                             </>
                         ) : (
                             <div className="auth-field">
@@ -182,14 +175,14 @@ export function ForgotPage() {
                             </div>
                         )}
 
-                        <Button block size="lg" type="submit" disabled={token ? state.resetting : state.sending}>
-                            {token
+                        <Button block size="lg" type="submit" disabled={form.token ? state.resetting : state.sending}>
+                            {form.token
                                 ? (state.resetting ? t('提交中...', 'Submitting...') : t('重置密码', 'Reset password'))
                                 : (state.sending ? t('发送中...', 'Sending...') : t('发送重置邮件', 'Send reset email'))}
                         </Button>
                     </form>
 
-                    {!token && (
+                    {!form.token && (
                         <p className="fp-back">
                             <a href="/sign-in" onClick={(e) => { e.preventDefault(); nav('/sign-in') }}>{t('返回登录', 'Back to sign in')}</a>
                         </p>

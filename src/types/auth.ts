@@ -13,6 +13,15 @@ export type SignUpForm = {
     confirmPassword: string  // 仅前端校验用，不会发送到后端
 }
 
+// 重置密码表单提交的数据结构
+// 字段命名沿用项目 camelCase 约定（同 SignUpForm）；到 snake_case 请求体的转换在 API 层完成
+export type ResetPasswordForm = {
+    email: string             // 账号邮箱；后端用它二次校验 token 归属，防止令牌被跨账号复用
+    token: string             // 邮件链接中的一次性重置令牌
+    newPassword: string       // 新密码
+    confirmPassword: string   // 二次输入的新密码，后端会做一致性校验
+}
+
 // 登录接口成功时 data 字段的结构
 export interface TokenData {
     token: string  // 认证令牌，后续请求通过 Authorization: Bearer <token> 携带

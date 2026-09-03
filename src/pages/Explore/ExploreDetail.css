@@ -2,6 +2,18 @@
 .ei-page {
   display: flex;
   flex-direction: column;
+  /* min-height 与站内其它页面对齐(Album/Explore/Library 等)，撑起视口高度，
+     确保加载中/加载完成的两种视图外层高度一致，切换时不会出现高度跳动 */
+  min-height: calc(100vh - 277px);
+}
+
+/* 加载中 / 无数据 的占位容器：flex 撑满 .ei-page 剩余高度并把内容居中，
+   加载完成后正常的 .ei-layout 会替换它，页面总高度保持不变 */
+.ei-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ─── Layout: left image + right sidebar ──────────────────── */
