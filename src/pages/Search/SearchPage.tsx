@@ -1,5 +1,5 @@
 // ─── React 核心 ───────────────────────────────────────────────────────────────
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 
 // ─── 第三方库 ─────────────────────────────────────────────────────────────────
 import {Masonry} from 'masonic'
@@ -15,61 +15,66 @@ import {Icon} from '@/components/common/icon/Icon'
 import {useTranslation} from '@/hooks/useTranslation'  // 返回 (zh, en) => string 函数
 
 // ─── API ──────────────────────────────────────────────────────────────────────
-import {getExplore} from '@/api/exploreApi'  // category 传空字符串时后端返回全部分类
+// 唯一数据源：/api/search。空 q 时后端返回全库按热度降序，等价于"热门"兜底
+import {searchImages} from '@/api/searchApi'
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 import type {GalleryItem} from '@/types/explore'  // type-only import，编译后完全擦除
 
+// ─── 常量 ─────────────────────────────────────────────────────────────────────
+import {SEARCH_PAGE_SIZE, SEARCH_SUGGESTIONS} from '@/constants/search'
+
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './SearchPage.css'
-
-// ─── 常量 ─────────────────────────────────────────────────────────────────────
-// 单次拉取的图片数量；搜索为客户端过滤，一次取回更多数据避免分页请求
-const PAGE_SIZE = 100
-
-// q 是实际写入搜索框的英文词；zh/en 是按钮显示的本地化标签
-const SUGGESTIONS = [
-    {zh: '壁纸', en: 'wallpaper', q: 'wallpaper'},
-    {zh: '渐变', en: 'gradient', q: 'gradient'},
-    {zh: '城市', en: 'city', q: 'city'},
-    {zh: 'UI', en: 'UI', q: 'ui'},
-    {zh: '摄影', en: 'portrait', q: 'portrait'},
-    {zh: '抽象', en: 'abstract', q: 'abstract'},
-]
-
-// 将多个字段拼成一个字符串后做 includes，比逐字段 || 更简洁且易扩展
-function matchesSearch(item: GalleryItem, query: string) {
-    const haystack = [item.title, item.author, item.album, item.type].join(' ').toLowerCase()
-    return haystack.includes(query)
-}
 
 export default function SearchPage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
     const t = useTranslation()
-    // 搜索框输入值；初始空字符串，无查询词时展示热门内容
+    // 搜索框输入值；初始空字符串，无查询词时后端返回热门列表
     const [query, setQuery] = useState('')
     // 当前在弹窗中预览的条目；null 表示弹窗关闭，非 null 时 GalleryDetail 展开
     const [drawerItem, setDrawerItem] = useState<GalleryItem | null>(null)
 
-    // 搜索结果数据源；挂载时从后端拉取全量数据
-    const [items, setItems] = useState<GalleryItem[]>([])
+    // 搜索结果 + 全库匹配总数（total 用于 meta 精确显示，不是当前页数量）
+    const [results, setResults] = useState<GalleryItem[]>([])
+    const [total, setTotal] = useState(0)
+    // 请求进行中；用于渲染 loading 空状态，避免"无结果"和"未开始"混淆
+    // 初始 true 让首屏（挂载即触发一次空 q 请求）直接进入 loading 态而非"无结果"
+    const [loading, setLoading] = useState(true)
+    // Masonry 重挂载版本号：每次 setResults 时 +1，作为 <Masonry key={}> 使用
+    // 目的：绕过 masonic 的 positioner 跨渲染缓存 bug（items 缩短时不会清 interval，
+    // 会导致 items[i] 越界成 undefined、进而 WeakMap.set(undefined) 抛错）。
+    // 只在"新数据到达"时 bump，用户输入过程中不 bump —— 避免每次搜索闪烁两次
+    const [gridVersion, setGridVersion] = useState(0)
 
     // 只需要 DOM 引用来调用 .focus()，变化时不需要触发重渲染，所以用 useRef 而非 useState
     const inputRef = useRef<HTMLInputElement | null>(null)
 
-    // 防抖：query 变化后等待 750ms 才更新 debouncedQuery，减少击键时的过度计算
+    // 防抖：query 变化后等待 750ms 才更新 debouncedQuery，减少击键时的过度请求
     const [debouncedQuery, setDebouncedQuery] = useState('')
     useEffect(() => {
         const timer = window.setTimeout(() => setDebouncedQuery(query.trim().toLowerCase()), 750)
         return () => window.clearTimeout(timer)
     }, [query])
 
-    // 触发时机：组件挂载时拉取全量数据供客户端搜索；category 传空字符串返回全部分类
+    // debouncedQuery 变化时（包括挂载时的初始 ''）请求后端搜索
+    // 空 q 后端返回全库热门；非空 q 走全文匹配。cancelled 标志避免快速切词时的竞态
     useEffect(() => {
-        getExplore(1, PAGE_SIZE, '').then(res => {
-            if (res.code === 200) setItems(res.data.items)
+        let cancelled = false
+        searchImages(debouncedQuery, 1, SEARCH_PAGE_SIZE).then(res => {
+            if (cancelled) return
+            if (res.code === 200) {
+                setResults(res.data.items)
+                setTotal(res.data.total)
+                // 与 setResults 同一批更新：让 Masonry 的 key 变化和 items 变化在同一次
+                // 渲染中生效，触发一次干净的 unmount+mount（positioner 重建）
+                setGridVersion(v => v + 1)
+            }
+        }).finally(() => {
+            if (!cancelled) setLoading(false)
         })
-    }, [])
+        return () => { cancelled = true }
+    }, [debouncedQuery])
 
     // 触发时机：组件挂载时聚焦搜索框，空依赖数组确保只执行一次
     useEffect(() => {
@@ -83,13 +88,9 @@ export default function SearchPage() {
         <GalleryCard item={data} onOpen={setDrawerItem}/>
     ), [])
 
-    // 不用 useMemo 则每次击键都会对全量 items 重新 filter/sort，数据量大时会卡顿
-    const results = useMemo(() => {
-        if (!debouncedQuery) {
-            return items.slice().sort((a, b) => b.view - a.view)
-        }
-        return items.filter((item) => matchesSearch(item, debouncedQuery))
-    }, [debouncedQuery, items])
+    // hasQuery：是否处于"真正搜索"态；用于 meta 文案与空态提示的分支
+    const hasQuery = debouncedQuery.length > 0
+    const hasResults = results.length > 0
 
     return (
         // Fragment：GalleryDetail 需要与主 section 同级渲染
@@ -125,7 +126,7 @@ export default function SearchPage() {
                     {/* key 用 q（搜索词）而非 zh/en：q 是固定的英文词，语言切换时保持稳定 */}
                     <div className="search-suggest">
                         <span className="s-lbl">{t('热门搜索', 'Popular')}</span>
-                        {SUGGESTIONS.map((item) => (
+                        {SEARCH_SUGGESTIONS.map((item) => (
                             <Button variant="ghost" className="s-chip" key={item.q} onClick={() => setQuery(item.q)}
                                     type="button">
                                 {t(item.zh, item.en)}
@@ -134,25 +135,30 @@ export default function SearchPage() {
                     </div>
                 </div>
 
-                {/* ─── 搜索结果区：有结果时才渲染 ───────────────────────────── */}
-                {results.length > 0 && (
+                {/* ─── 搜索结果区：有结果时才渲染 ────────────────────────────── */}
+                {hasResults && (
                     <>
-                        {/* 无查询词时显示"热门"标题，有查询词时显示结果数量 */}
+                        {/* meta 文案按是否有查询词分支：
+                            - 有查询词：显示后端 total（不是 results.length，那只是当前页数量）
+                            - 空查询：等价于热门列表，展示"热门"标签 */}
                         <div className="search-meta">
-                            {debouncedQuery.length === 0
-                                ? (
+                            {hasQuery
+                                ? t(`找到 ${total} 张 "${query}" 相关图片`, `Found ${total} shots of "${query}"`)
+                                : (
                                     <>
                                         <b>{t('热门搜索', 'Popular')}</b>
                                         {t(' · 社区此刻的热门', ' · Popular in the community')}
                                     </>
-                                )
-                                : t(`找到 ${results.length} 张 "${query}" 相关图片`, `Found ${results.length} shots of "${query}"`)}
+                                )}
                         </div>
-                        {/* key={debouncedQuery} 只在防抖后的值变化时才重建 Masonry，避免每次击键都触发重建导致 itemKey 访问 undefined */}
+                        {/* key={gridVersion} 让 Masonry 在"新数据到达"时干净重建一次
+                            （positioner 跟着重建，规避 masonic 越界 undefined 触发的
+                            WeakMap.set(undefined) 异常）。用户输入过程中 gridVersion
+                            不变 → 不 remount → 无闪烁 */}
                         <Masonry
-                            key={debouncedQuery}
+                            key={gridVersion}
                             items={results}
-                            itemKey={(item) => item?.id ?? 0}
+                            itemKey={(item) => item.id}
                             render={CardRenderer}
                             columnWidth={240}
                             columnGutter={20}
@@ -162,12 +168,25 @@ export default function SearchPage() {
                     </>
                 )}
 
-                {/* ─── 无结果空状态：有查询词且无结果时才显示，避免初始状态出现"无结果" */}
-                {debouncedQuery.length > 0 && results.length === 0 && (
+                {/* ─── 搜索中占位：请求进行中且暂无结果时显示 ─────────────────── */}
+                {loading && !hasResults && (
                     <Empty
                         icon={<Icon name="search"/>}
-                        title={t('没有找到结果', 'No results found')}
-                        message={t(`未找到与"${query}"匹配的图片，换个关键词试试。`, `Nothing matched "${query}". Try a different keyword.`)}
+                        title={t('搜索中...', 'Searching...')}
+                        message={hasQuery
+                            ? t(`正在为 "${query}" 查找相关图片`, `Looking up "${query}"`)
+                            : t('正在加载热门图片', 'Loading popular images')}
+                    />
+                )}
+
+                {/* ─── 无结果空状态：请求完成且真的没有匹配时才显示 ─────────────── */}
+                {!loading && !hasResults && (
+                    <Empty
+                        icon={<Icon name="search"/>}
+                        title={hasQuery ? t('没有找到结果', 'No results found') : t('暂无图片', 'No images yet')}
+                        message={hasQuery
+                            ? t(`未找到与"${query}"匹配的图片，换个关键词试试。`, `Nothing matched "${query}". Try a different keyword.`)
+                            : t('稍后再来看看，或成为第一个上传者。', 'Check back later, or be the first to upload.')}
                     />
                 )}
             </section>

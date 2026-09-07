@@ -34,15 +34,13 @@ import {splitMonth} from '@/utils/split'
 
 // ─── 常量 ─────────────────────────────────────────────────────────────────────
 // SORT_OPTIONS / TYPE_OPTIONS：排序和类型筛选的静态选项列表
-import {SORT_OPTIONS, TYPE_OPTIONS} from '@/constants/library'
+import {LIBRARY_PAGE_SIZE, SORT_OPTIONS, TYPE_OPTIONS} from '@/constants/library'
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 import {getAlbums, getLibraryImages, getLibraryStats, batchDeleteImages} from '@/api/libraryApi'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './LibraryPage.css'
-
-const PAGE_SIZE = 48
 
 export default function LibraryPage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
@@ -95,7 +93,7 @@ export default function LibraryPage() {
         sort: filter.sort,
         q: debouncedQuery || undefined,  // 避免将空字符串传给 API，undefined 让服务端忽略该参数
         page,
-        pageSize: PAGE_SIZE,
+        pageSize: LIBRARY_PAGE_SIZE,
     }), [filter.album, filter.type, filter.sort, debouncedQuery])
 
     useEffect(() => {

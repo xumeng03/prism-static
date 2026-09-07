@@ -15,3 +15,7 @@ export const SORT_OPTIONS: {value: string; zh: string; en: string}[] = [
     {value: 'name',   zh: '名称 A-Z', en: 'Name A-Z'},
     {value: 'size',   zh: '文件大小', en: 'Largest first'},
 ]
+
+// 图库列表单页拉取数量：与 ExplorePage 保持一致的 48 张 / 页
+export const LIBRARY_PAGE_SIZE = 48
+

@@ -38,6 +38,18 @@ interface ImageDetailModalProps {
     onDeleted?: (id: number) => void
 }
 
+// 计算 translate 的合法边界并做 clamp：
+// 容器 W×H 里居中缩放到 S 倍时，只要 |tx| > W*(S-1)/2 或 |ty| > H*(S-1)/2
+// 就意味着容器某一侧出现留白（图片被拖到画面外），把它们钳回边界即可
+function clampTranslate(x: number, y: number, scale: number, wrapWidth: number, wrapHeight: number) {
+    const maxX = wrapWidth * (scale - 1) / 2
+    const maxY = wrapHeight * (scale - 1) / 2
+    return {
+        x: Math.max(-maxX, Math.min(maxX, x)),
+        y: Math.max(-maxY, Math.min(maxY, y)),
+    }
+}
+
 export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: ImageDetailModalProps) {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
     const t = useTranslation()
@@ -56,6 +68,16 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [deleting, setDeleting] = useState(false)
 
+    // ── 图片缩放 / 平移 ──────────────────────────────────────────────────────
+    // scale=1 表示原始尺寸；translate 为 transform-origin 中心相对的偏移量（px）
+    // 拖拽起点存在 ref 里而非 state，避免每次 mousemove 都触发重渲染
+    // 起点里也快照容器尺寸和当时的 scale，供 clamp 使用（拖拽过程中 scale 不会变）
+    const [scale, setScale] = useState(1)
+    const [translate, setTranslate] = useState({x: 0, y: 0})
+    const dragStartRef = useRef<{ mx: number; my: number; tx: number; ty: number; w: number; h: number; s: number } | null>(null)
+    const SCALE_MIN = 1
+    const SCALE_MAX = 5
+
     // 弹窗打开时锁定背景滚动；补偿滚动条宽度避免内容左右跳动，关闭时还原原始样式
     useEffect(() => {
         if (!item) return
@@ -71,6 +93,25 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
             document.body.style.paddingRight = prevPadding
         }
     }, [item])
+
+    // 拖拽期间用 window 监听 mousemove/up：鼠标移出容器也不会丢失事件；
+    // 空依赖 + ref 读取，确保 listener 只挂一次
+    useEffect(() => {
+        const move = (e: MouseEvent) => {
+            const drag = dragStartRef.current
+            if (!drag) return
+            const nextX = drag.tx + (e.clientX - drag.mx)
+            const nextY = drag.ty + (e.clientY - drag.my)
+            setTranslate(clampTranslate(nextX, nextY, drag.s, drag.w, drag.h))
+        }
+        const up = () => { dragStartRef.current = null }
+        window.addEventListener('mousemove', move)
+        window.addEventListener('mouseup', up)
+        return () => {
+            window.removeEventListener('mousemove', move)
+            window.removeEventListener('mouseup', up)
+        }
+    }, [])
 
     // 未选中图片时不渲染弹窗，避免空白 DOM；下方闭包可在 item 非空前提下直接使用 item
     if (!item) return null
@@ -112,19 +153,67 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
         }, 1400)
     }
 
+    // 缩放：以指针位置为焦点做仿射变换，让指针下的像素保持不动
+    // 数学推导：新的 translate = 指针坐标 - (指针坐标 - 旧 translate) * ratio
+    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+        // deltaY 为正=向下滚=缩小；系数 0.002 控制单次滚动的缩放增量（约 10%/tick）
+        const nextScale = Math.max(SCALE_MIN, Math.min(SCALE_MAX, scale * (1 + -e.deltaY * 0.002)))
+        if (nextScale === scale) return
+        const rect = e.currentTarget.getBoundingClientRect()
+        // 指针相对容器中心的坐标（transform-origin 在 center center）
+        const cx = e.clientX - rect.left - rect.width / 2
+        const cy = e.clientY - rect.top - rect.height / 2
+        const ratio = nextScale / scale
+        const rawX = cx - (cx - translate.x) * ratio
+        const rawY = cy - (cy - translate.y) * ratio
+        setTranslate(clampTranslate(rawX, rawY, nextScale, rect.width, rect.height))
+        setScale(nextScale)
+    }
+
+    // 拖拽起手：仅在放大态下拦截左键，缓存起点让 mousemove 计算增量
+    // 同时快照容器尺寸和当时的 scale，供 clamp 使用（拖拽过程中假定 scale 不变）
+    const handleImageMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (scale <= 1 || e.button !== 0) return
+        e.preventDefault()
+        const rect = e.currentTarget.getBoundingClientRect()
+        dragStartRef.current = {
+            mx: e.clientX, my: e.clientY,
+            tx: translate.x, ty: translate.y,
+            w: rect.width, h: rect.height, s: scale,
+        }
+    }
+
+    // 一键复位到原始尺寸；右下角徽标按钮触发
+    const resetZoom = () => {
+        setScale(1)
+        setTranslate({x: 0, y: 0})
+    }
+
     return (
         <>
             <div className="idm-scrim" onMouseDown={(e) => {
                 if (e.target === e.currentTarget) onClose()
             }}>
                 <div className="idm-panel">
-                    <div className="idm-image-wrap">
-                        <ProgressiveImage
-                            className="idm-image"
-                            src={item.url}
-                            original={item.originalUrl}
-                            alt={item.title}
-                        />
+                    <div className="idm-image-wrap"
+                         onWheel={handleWheel}
+                         onMouseDown={handleImageMouseDown}
+                         style={{cursor: scale > 1 ? 'grab' : 'zoom-in'}}>
+                        <div className="idm-image-transform"
+                             style={{transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`}}>
+                            <ProgressiveImage
+                                className="idm-image"
+                                src={item.url}
+                                original={item.originalUrl}
+                                alt={item.title}
+                            />
+                        </div>
+                        {/* 缩放态徽标：显示当前百分比 + 单击复位；1x 时不显示避免干扰 */}
+                        {scale > 1 && (
+                            <button className="idm-zoom-badge" type="button" onClick={resetZoom}>
+                                {Math.round(scale * 100)}%
+                            </button>
+                        )}
                     </div>
 
                     <div className="idm-meta">
