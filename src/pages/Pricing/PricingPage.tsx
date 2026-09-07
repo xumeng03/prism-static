@@ -1,5 +1,5 @@
 // ─── React 核心 ───────────────────────────────────────────────────────────────
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 // ─── 第三方：路由 ─────────────────────────────────────────────────────────────
 import {useNavigate, useSearchParams} from 'react-router-dom'
@@ -43,14 +43,6 @@ export default function PricingPage() {
     // 由 PlanCard 判定为"没有当前方案"，所有卡片都展示升级 CTA、不高亮任何一张
     const currentPlanKey: PlanKey | null = user ? (user.plan.toLowerCase() as PlanKey) : null
 
-    // billing 或语言切换时重新生成计费说明文案；t 引用在语言切换时会变化，因此需要列为依赖
-    const billingNote = useMemo(
-        () => billing === 'annual'
-            ? t('按年计费 · 立省 20%', 'billed annually · save 20%')
-            : t('按月计费', 'billed monthly'),
-        [billing, t],
-    )
-
     // 支付跳转进行中，防止重复提交订单
     const [subscribing, setSubscribing] = useState(false)
     // 取消订阅确认弹窗开关；初始 false，点击"取消订阅"后置 true
@@ -60,13 +52,10 @@ export default function PricingPage() {
 
     // ── PayPal 回跳态处理 ─────────────────────────────────────────────────────
     // 页面首次加载时若带有 ?status=success|cancelled，触发对应 toast 并清掉 query
-    // useRef 防止 React 18 StrictMode 下的双次执行 / 语言切换重执行
-    const statusHandledRef = useRef(false)
+    // 空依赖数组：PayPal 状态只在挂载时读取一次，语言切换 / searchParams 变化无需重执行
     useEffect(() => {
-        if (statusHandledRef.current) return
         const status = searchParams.get('status')
         if (!status) return
-        statusHandledRef.current = true
 
         if (status === 'success') {
             toast.success(t('订阅成功，欢迎升级！', 'Subscription successful. Welcome!'))
@@ -84,7 +73,8 @@ export default function PricingPage() {
             next.delete('status')
             return next
         }, {replace: true})
-    }, [searchParams, setSearchParams, setUser, t])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // handleUpgrade：按当前计费周期创建订阅，成功后跳转支付页
     const handleUpgrade = async (plan: Plan) => {
@@ -158,7 +148,6 @@ export default function PricingPage() {
                         key={plan.key}
                         plan={plan}
                         billing={billing}
-                        billingNote={billingNote}
                         currentPlanKey={currentPlanKey}
                         subscribing={subscribing}
                         onUpgrade={handleUpgrade}

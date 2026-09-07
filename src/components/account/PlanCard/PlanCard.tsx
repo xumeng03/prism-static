@@ -19,8 +19,6 @@ interface PlanCardProps {
     plan: Plan
     // 当前计费周期，决定展示月付还是年付价格
     billing: BillingMode
-    // 计费说明文案（由父组件按 billing/语言生成），免费方案不显示
-    billingNote: string
     // 用户当前所在套餐 key，用于高亮卡片与禁用降级/当前按钮
     // null 表示未登录：不高亮任何卡片，所有非免费方案都显示升级 CTA
     currentPlanKey: PlanKey | null
@@ -32,11 +30,15 @@ interface PlanCardProps {
     onCancel: () => void
 }
 
-export function PlanCard({plan, billing, billingNote, currentPlanKey, subscribing, onUpgrade, onCancel}: PlanCardProps) {
+export function PlanCard({plan, billing, currentPlanKey, subscribing, onUpgrade, onCancel}: PlanCardProps) {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
     const t = useTranslation()
     // 在组件内计算当前周期的价格，避免在 JSX 中重复写三元表达式
     const amount = billing === 'annual' ? plan.annual : plan.monthly
+    // 计费周期说明文案：在这里算比父组件传 prop 更自然，billing 和 t 本来就在组件内
+    const billingNote = billing === 'annual'
+        ? t('按年计费 · 立省 20%', 'billed annually · save 20%')
+        : t('按月计费', 'billed monthly')
 
     return (
         // featured class 高亮当前用户所在的方案卡片
