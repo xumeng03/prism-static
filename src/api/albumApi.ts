@@ -10,9 +10,14 @@ export function listAlbums(): Promise<ApiResponse<Album[]>> {
     return get<ApiResponse<Album[]>>('/album')
 }
 
-// 获取指定相册内的图片列表；id 来自 URL 路由参数（字符串），调用前需转换为 number
-export function listAlbumImages(id: number): Promise<ApiResponse<AlbumImagesResult>> {
-    return get<ApiResponse<AlbumImagesResult>>(`/album/images/${id}`)
+// 获取指定相册的详情（名称、描述、图片数、封面缩略图）
+export function getAlbum(id: number): Promise<ApiResponse<Album>> {
+    return get<ApiResponse<Album>>(`/album/${id}`)
+}
+
+// 获取指定相册内的图片列表，支持分页；id 来自 URL 路由参数，调用前需转换为 number
+export function listAlbumImages(id: number, page: number, page_size: number): Promise<ApiResponse<AlbumImagesResult>> {
+    return get<ApiResponse<AlbumImagesResult>>(`/album/images/${id}`, {page, page_size})
 }
 
 // 创建相册；返回完整 Album 对象，调用方可直接使用而无需再次请求列表
