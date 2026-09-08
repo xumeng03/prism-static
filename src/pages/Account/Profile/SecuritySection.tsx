@@ -35,8 +35,8 @@ export function SecuritySection() {
 
     // 密码表单字段；初始空字符串，保存成功后清空
     const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [new_password, setNewPassword] = useState('')
+    const [confirm_password, setConfirmPassword] = useState('')
 
     // 三个密码框各自的明文/密文切换开关（原 PasswordInput 组件内部管理，内联后由父组件维护）
     const [showCurrent, setShowCurrent] = useState(false)
@@ -44,15 +44,15 @@ export function SecuritySection() {
     const [showConfirm, setShowConfirm] = useState(false)
 
     const savePassword = async () => {
-        if (!currentPassword || !newPassword || !confirmPassword) {
+        if (!currentPassword || !new_password || !confirm_password) {
             toast.error(t('请填写完整', 'Missing fields'))
             return
         }
-        if (newPassword !== confirmPassword) {
+        if (new_password !== confirm_password) {
             toast.error(t('两次密码不一致', 'Passwords do not match'))
             return
         }
-        const res = await updatePassword({old_password: currentPassword, new_password: newPassword})
+        const res = await updatePassword({old_password: currentPassword, new_password})
         if (res.code !== 200) {
             toast.error(res.message)
             return
@@ -100,7 +100,7 @@ export function SecuritySection() {
                         <div className="pw-field">
                             <input className="input"
                                    type={showNew ? 'text' : 'password'}
-                                   value={newPassword}
+                                   value={new_password}
                                    placeholder={t('输入新密码', 'Enter new password')}
                                    onChange={(e) => setNewPassword(e.target.value)}/>
                             <button type="button" className="pw-eye" onClick={() => setShowNew((v) => !v)}>
@@ -113,7 +113,7 @@ export function SecuritySection() {
                         <div className="pw-field">
                             <input className="input"
                                    type={showConfirm ? 'text' : 'password'}
-                                   value={confirmPassword}
+                                   value={confirm_password}
                                    placeholder={t('再次输入新密码', 'Re-enter new password')}
                                    onChange={(e) => setConfirmPassword(e.target.value)}/>
                             <button type="button" className="pw-eye" onClick={() => setShowConfirm((v) => !v)}>

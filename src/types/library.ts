@@ -21,9 +21,9 @@ export interface LibraryQuery {
     album?: string
     type?: string
     sort?: string
-    q?: string      // 搜索关键词
+    q?: string        // 搜索关键词
     page: number
-    pageSize: number
+    page_size: number
 }
 
 // 图库分页响应结构

@@ -64,9 +64,9 @@ export default function LibraryPage() {
     // 筛选条件；album/type 初始 'all' 表示不过滤，sort 初始 'newest' 是最常用的默认排序
     const [filter, setFilter] = useImmer({album: 'all', type: 'all', sort: 'newest'})
 
-    // 无限滚动的图片流：items 累积追加，loading 防止重复请求，hasMore 控制是否继续监听哨兵
-    // 初始 hasMore: true 是乐观假设——在拿到第一页数据之前先假设有更多内容，避免闪烁
-    const [gallery, setGallery] = useImmer({items: [] as GalleryItem[], loading: false, hasMore: true})
+    // 无限滚动的图片流：items 累积追加，loading 防止重复请求，has_more 控制是否继续监听哨兵
+    // 初始 has_more: true 是乐观假设——在拿到第一页数据之前先假设有更多内容，避免闪烁
+    const [gallery, setGallery] = useImmer({items: [] as GalleryItem[], loading: false, has_more: true})
 
     // 哨兵 DOM 节点：IntersectionObserver 监听它进入视口来触发加载下一批；
     // 只需要 DOM 引用，变化时不需要触发重渲染，所以用 useRef 而非 useState
@@ -93,7 +93,7 @@ export default function LibraryPage() {
         sort: filter.sort,
         q: debouncedQuery || undefined,  // 避免将空字符串传给 API，undefined 让服务端忽略该参数
         page,
-        pageSize: LIBRARY_PAGE_SIZE,
+        page_size: LIBRARY_PAGE_SIZE,
     }), [filter.album, filter.type, filter.sort, debouncedQuery])
 
     useEffect(() => {
@@ -136,13 +136,13 @@ export default function LibraryPage() {
         setGallery(d => {
             d.items = [];
             d.loading = true;
-            d.hasMore = true
+            d.has_more = true
         })
         loadImages(1).then(res => {
             if (res.code === 200) {
                 setGallery(d => {
                     d.items = res.data.list;
-                    d.hasMore = res.data.has_more
+                    d.has_more = res.data.has_more
                 })
             }
         }).finally(() => setGallery(d => {
@@ -156,7 +156,7 @@ export default function LibraryPage() {
         if (!el) return
         const observer = new IntersectionObserver(([entry]) => {
             // loading 中或已无更多数据时不触发，防止并发请求或无效请求
-            if (!entry.isIntersecting || gallery.loading || !gallery.hasMore) return
+            if (!entry.isIntersecting || gallery.loading || !gallery.has_more) return
             const nextPage = pageRef.current + 1
             setGallery(d => {
                 d.loading = true
@@ -166,7 +166,7 @@ export default function LibraryPage() {
                     // Immer 允许直接 push，将新一批追加到已有列表末尾
                     setGallery(d => {
                         d.items.push(...res.data.list);
-                        d.hasMore = res.data.has_more
+                        d.has_more = res.data.has_more
                     })
                     pageRef.current = nextPage  // 请求成功才推进页码，失败则下次重试同页
                 }
@@ -176,7 +176,7 @@ export default function LibraryPage() {
         }, {rootMargin: '50px'})  // 提前 50px 触发，在用户到达底部前开始加载，减少等待感
         observer.observe(el)
         return () => observer.disconnect()  // 依赖变化重建 Observer 前先断开旧的
-    }, [gallery.loading, gallery.hasMore, loadImages, setGallery])
+    }, [gallery.loading, gallery.has_more, loadImages, setGallery])
 
     const toggleSelect = (id: number) => {
         // 必须创建新 Set 而非直接修改 current：React 依赖引用变化来判断是否触发重渲染
@@ -327,7 +327,7 @@ export default function LibraryPage() {
                         <span>{t('加载中...', 'Loading...')}</span>
                     </div>
                 )}
-                {!gallery.hasMore && gallery.items.length > 0 && (
+                {!gallery.has_more && gallery.items.length > 0 && (
                     <div className="feed-loader">
                         <span>{t('已经到底了~', 'You\'ve reached the end~')}</span>
                     </div>

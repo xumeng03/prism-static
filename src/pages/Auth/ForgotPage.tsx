@@ -45,12 +45,12 @@ export function ForgotPage() {
         showConfirmPassword: false,
         error: null as string | null,
     })
-    // 表单数据：token（从 query 预填）用于切换重置流程 + 提交；email 用于请求重置邮件与重置校验；newPassword / confirmPassword 用于设置新密码
+    // 表单数据：token（从 query 预填）用于切换重置流程 + 提交；email 用于请求重置邮件与重置校验；new_password / confirm_password 用于设置新密码
     const [form, setForm] = useImmer<ResetPasswordForm>({
         token: presetToken ?? '',
         email: presetEmail ?? '',
-        newPassword: '',
-        confirmPassword: '',
+        new_password: '',
+        confirm_password: '',
     })
 
     // 业务错误双通道提示：auth-warn 表单内持久 + toast 顶部瞬态
@@ -82,11 +82,11 @@ export function ForgotPage() {
 
     // handleReset：携带 token 设置新密码，成功后提示并跳转登录
     const handleReset = async () => {
-        if (!form.newPassword || !form.confirmPassword) {
+        if (!form.new_password || !form.confirm_password) {
             showError(t('请填写完整', 'Missing fields'))
             return
         }
-        if (form.newPassword !== form.confirmPassword) {
+        if (form.new_password !== form.confirm_password) {
             showError(t('两次密码不一致', 'Passwords do not match'))
             return
         }
@@ -146,8 +146,8 @@ export function ForgotPage() {
                                     <span className="ic"><Icon name="lock"/></span>
                                     <input type={state.showPassword ? 'text' : 'password'}
                                            placeholder={t('新密码', 'New password')}
-                                           value={form.newPassword}
-                                           onChange={(e) => setForm(d => { d.newPassword = e.target.value })}/>
+                                           value={form.new_password}
+                                           onChange={(e) => setForm(d => { d.new_password = e.target.value })}/>
                                     <button type="button" className="toggle-eye"
                                             onClick={() => setState(d => { d.showPassword = !d.showPassword })}>
                                         <Icon name={state.showPassword ? 'eye-close' : 'eye-open'}/>
@@ -157,8 +157,8 @@ export function ForgotPage() {
                                     <span className="ic"><Icon name="lock"/></span>
                                     <input type={state.showConfirmPassword ? 'text' : 'password'}
                                            placeholder={t('确认新密码', 'Confirm new password')}
-                                           value={form.confirmPassword}
-                                           onChange={(e) => setForm(d => { d.confirmPassword = e.target.value })}/>
+                                           value={form.confirm_password}
+                                           onChange={(e) => setForm(d => { d.confirm_password = e.target.value })}/>
                                     <button type="button" className="toggle-eye"
                                             onClick={() => setState(d => { d.showConfirmPassword = !d.showConfirmPassword })}>
                                         <Icon name={state.showConfirmPassword ? 'eye-close' : 'eye-open'}/>

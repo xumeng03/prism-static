@@ -44,10 +44,10 @@ export function getImage(id: number): Promise<ApiResponse<GalleryItem>> {
 
 // 分页获取图库图片列表，支持按相册、类型、关键词筛选和排序
 export function getLibraryImages(params: LibraryQuery): Promise<ApiResponse<LibraryResult>> {
-    const {album, type, sort, q, page, pageSize} = params
+    const {album, type, sort, q, page, page_size} = params
     return get<ApiResponse<LibraryResult>>('/library', {
         page,
-        page_size: pageSize,
+        page_size,
         sort,
         // {...false} 展开什么也不加，{...{album: 'xxx'}} 则把 album 属性写入
         ...(album && album !== 'all' && {album}),

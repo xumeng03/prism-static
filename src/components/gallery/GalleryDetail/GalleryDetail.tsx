@@ -204,7 +204,7 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
                             <ProgressiveImage
                                 className="idm-image"
                                 src={item.url}
-                                original={item.originalUrl}
+                                original={item.original_url}
                                 alt={item.title}
                             />
                         </div>
@@ -218,7 +218,7 @@ export function GalleryDetail({item, onClose, showDelete = false, onDeleted}: Im
 
                     <div className="idm-meta">
                         <div className="idm-author">
-                            <span className="idm-ava" style={item.avatar ? undefined : {background: item.avaGrad}}>
+                            <span className="idm-ava" style={item.avatar ? undefined : {background: item.ava_grad}}>
                                 {item.avatar ? <img src={item.avatar} alt="" className="idm-ava-img"/> : (item.author?.[0] ?? '?')}
                             </span>
                             <div className="idm-author-info">

@@ -67,8 +67,8 @@ export function GalleryCard({item, onOpen}: GalleryItemCardProps) {
                 <div className="tile-title">{item.title}</div>
                 <div className="tile-foot">
                     <div className="tile-author">
-                        {/* 作者头像：有 avatar URL 则展示图片，无则用 avaGrad 渐变色 + 首字母兜底 */}
-                        <span className="mini-ava" style={item.avatar ? undefined : {background: item.avaGrad}}>
+                        {/* 作者头像：有 avatar URL 则展示图片，无则用 ava_grad 渐变色 + 首字母兜底 */}
+                        <span className="mini-ava" style={item.avatar ? undefined : {background: item.ava_grad}}>
                             {item.avatar ? <img src={item.avatar} alt="" className="mini-ava-img"/> : item.author[0]}
                         </span>
                         {item.author}

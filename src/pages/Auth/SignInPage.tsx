@@ -40,7 +40,7 @@ export function SignInPage() {
         resending: false,
     })
     // 表单数据；remember 初始 true，大多数用户希望默认勾选"记住我"
-    const [form, setForm] = useImmer<SignInForm>({email: '', password: '', rememberMe: true})
+    const [form, setForm] = useImmer<SignInForm>({email: '', password: '', remember_me: true})
 
     // 业务错误双通道提示：auth-warn 表单内持久 + toast 顶部瞬态
     const showError = (msg: string) => {
@@ -167,9 +167,9 @@ export function SignInPage() {
                 <div className="auth-row">
                     <label>
                         <button type="button"
-                                className={`cbx ${form.rememberMe ? 'on' : ''}`}
+                                className={`cbx ${form.remember_me ? 'on' : ''}`}
                                 onClick={() => setForm(d => {
-                                    d.rememberMe = !d.rememberMe
+                                    d.remember_me = !d.remember_me
                                 })}>
                             <Icon name="check" size={11} color='#ffffff' weight={5}/>
                         </button>

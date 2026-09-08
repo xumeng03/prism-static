@@ -33,7 +33,7 @@ const PAGE_SIZE = 48;
 const MAX_ITEMS = 200;
 
 // 模块级缓存：导航到详情页返回后恢复列表，避免重新加载 + 丢失滚动位置
-let _galleryCache: { items: GalleryItem[]; loading: boolean; hasMore: boolean } | null = null
+let _galleryCache: { items: GalleryItem[]; loading: boolean; has_more: boolean } | null = null
 
 export function ExplorePage() {
     // t('中文', 'English') — 根据当前语言环境自动返回对应文本
@@ -55,7 +55,7 @@ export function ExplorePage() {
     // 图片列表 + 加载状态 + 是否还有更多页，用 useImmer 管理
     // useImmer 允许在回调里直接"修改"草稿对象 d，内部自动生成新的不可变状态
     const [gallery, setGallery] = useImmer(() =>
-        _galleryCache ?? ({items: [] as GalleryItem[], loading: false, hasMore: true})
+        _galleryCache ?? ({items: [] as GalleryItem[], loading: false, has_more: true})
     )
 
     // 无限滚动哨兵：绑定到页面底部一个不可见的 div
@@ -99,15 +99,15 @@ export function ExplorePage() {
         setGallery(d => {
             d.items = []
             d.loading = true
-            d.hasMore = false
+            d.has_more = false
         })
         getExplore(1, PAGE_SIZE, activeCategory.id)
             .then(res => {
-                const next = {items: res.data.items, hasMore: res.data.hasMore, loading: false}
+                const next = {items: res.data.items, has_more: res.data.has_more, loading: false}
                 _galleryCache = next
                 setGallery(d => {
                     d.items = next.items
-                    d.hasMore = next.hasMore
+                    d.has_more = next.has_more
                 })
             })
             .finally(() => setGallery(d => {
@@ -116,14 +116,14 @@ export function ExplorePage() {
     }, [activeCategory, setGallery])
 
     // ── Effect 3：无限滚动监听 ────────────────────────────────────────────────
-    // loading / hasMore / activeCategory 任意变化时重新绑定 Observer
+    // loading / has_more / activeCategory 任意变化时重新绑定 Observer
     // 旧 Observer 在 cleanup 函数里 disconnect，防止多个 Observer 同时监听
     useEffect(() => {
         const sentinel = sentinelRef.current
         if (!sentinel) return // 哨兵 div 尚未挂载时跳过
         const observer = new IntersectionObserver((entries) => {
             // isIntersecting = 哨兵进入视口；正在加载或没有更多时不触发
-            if (!entries[0].isIntersecting || gallery.loading || !gallery.hasMore) return
+            if (!entries[0].isIntersecting || gallery.loading || !gallery.has_more) return
             // 已达列表硬上限，视为到底，不再翻页
             if (gallery.items.length >= MAX_ITEMS) return
             const nextPage = pageRef.current + 1
@@ -135,7 +135,7 @@ export function ExplorePage() {
                     // 用 Set 去重，防止后端返回重复数据导致列表 key 冲突
                     const seen = new Set(d.items.map(i => i.id))
                     d.items.push(...res.data.items.filter(i => !seen.has(i.id)))
-                    d.hasMore = res.data.hasMore
+                    d.has_more = res.data.has_more
                 })
                 pageRef.current = nextPage // 翻页成功后更新页码
             }).finally(() => setGallery(d => {
@@ -144,7 +144,7 @@ export function ExplorePage() {
         }, {rootMargin: '100px'}) // 提前 50px 触发，让加载更流畅
         observer.observe(sentinel)
         return () => observer.disconnect() // cleanup：依赖变化或组件卸载时断开监听
-    }, [gallery.loading, gallery.hasMore, gallery.items.length, activeCategory, setGallery])
+    }, [gallery.loading, gallery.has_more, gallery.items.length, activeCategory, setGallery])
 
     return (
         <>
@@ -236,7 +236,7 @@ export function ExplorePage() {
                         </div>
                     )}
                     {/* 已加载全部时的底部文案 */}
-                    {!gallery.hasMore && (
+                    {!gallery.has_more && (
                         <div className="feed-loader">
                             <span>{t('已经到底了~', 'You\'ve reached the end~')}</span>
                         </div>

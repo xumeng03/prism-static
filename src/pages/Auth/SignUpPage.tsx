@@ -34,7 +34,7 @@ export function SignUpPage() {
     // UI 状态：密码可见性、提交中、行内报错信息
     const [state, setState] = useImmer({showPassword: false, showConfirmPassword: false, loading: false, error: null as string | null})
     // 表单数据；所有字段初始空字符串（注册页无"记住我"，无需预设默认值）
-    const [form, setForm] = useImmer<SignUpForm>({username: '', email: '', password: '', confirmPassword: ''})
+    const [form, setForm] = useImmer<SignUpForm>({username: '', email: '', password: '', confirm_password: ''})
 
     // 业务错误双通道提示：auth-warn 表单内持久 + toast 顶部瞬态
     const showError = (msg: string) => {
@@ -48,7 +48,7 @@ export function SignUpPage() {
             showError(t('请填写完整', 'Missing fields'))
             return
         }
-        if (form.password !== form.confirmPassword) {
+        if (form.password !== form.confirm_password) {
             showError(t('两次密码不一致', 'Passwords do not match'))
             return
         }
@@ -142,9 +142,9 @@ export function SignUpPage() {
                     </span>
                     <input type={state.showConfirmPassword ? 'text' : 'password'}
                            placeholder={t('确认密码', 'Confirm password')}
-                           value={form.confirmPassword}
+                           value={form.confirm_password}
                            onChange={(e) => setForm(d => {
-                               d.confirmPassword = e.target.value
+                               d.confirm_password = e.target.value
                            })}
                     />
                     <button type="button" className="toggle-eye" onClick={() => setState(d => {

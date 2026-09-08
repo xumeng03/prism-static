@@ -11,7 +11,7 @@ export interface GalleryItem {
     type: ImageFileType
     size: number            // 字节数，展示时调用 fmtSize() 转换为可读字符串
     url: string             // thumbnail_key → CDN URL，用于列表/卡片缩略图
-    originalUrl: string     // original_key → CDN URL，用于详情页展示原图
+    original_url: string    // original_key → CDN URL，用于详情页展示原图
     hash: string            // 文件内容哈希，用于服务端去重校验
     width: number           // 图片宽度（像素）
     height: number          // 图片高度（像素）
@@ -23,16 +23,16 @@ export interface GalleryItem {
     download: number        // 下载次数
     date: string            // 上传日期，格式 "yyyy-mm-dd hh:mm:ss"
     author: string          // 上传者昵称
-    avatar?: string         // 作者头像 CDN URL，有则展示图片，无则用 avaGrad 渐变色 + 首字母兜底
-    avaGrad: string         // 作者头像的个性化渐变色，由后端生成，全局唯一
+    avatar?: string         // 作者头像 CDN URL，有则展示图片，无则用 ava_grad 渐变色 + 首字母兜底
+    ava_grad: string        // 作者头像的个性化渐变色，由后端生成，全局唯一
     album: string           // 所属相册名称
 }
 
-// 单次分页结果：items 是本页图片，hasMore 告知是否还有下一页（控制无限滚动的哨兵行为）
+// 单次分页结果：items 是本页图片，has_more 告知是否还有下一页（控制无限滚动的哨兵行为）
 export interface ExploreResult {
     items: GalleryItem[]
     total: number
-    hasMore: boolean
+    has_more: boolean
 }
 
 // 平台统计数字；字段类型为 string 而非 number——后端已预先格式化（如 "1.2M"），前端直接展示

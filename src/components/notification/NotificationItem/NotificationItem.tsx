@@ -51,7 +51,7 @@ export function NotificationItem({item, unread, onOpen}: NotificationItemProps) 
                 <span className="nt-text">{item.message}</span>
                 <span className="nt-time">{t(...formatRelativeTime(item.time))}</span>
             </span>
-            {item.imageId != null ? (
+            {item.image_id != null ? (
                 <span className="nt-thumb">
                     <span className={`nt-tbadge nt-tbadge-${kind}`}>
                         <Icon name={KIND_ICON[kind] || 'sparkle'}/>

@@ -55,10 +55,10 @@ export default function ExploreDetail() {
     // 组件挂载后：记录浏览量 + 获取图片详情
     useEffect(() => {
         if (!id) return
-        const imageId = Number(id)
+        const image_id = Number(id)
         // getImage 前先调用 updateImageStats('view')，保证每次打开详情页都计入一次浏览
-        updateImageStats(imageId, 'view')
-        getImage(imageId)
+        updateImageStats(image_id, 'view')
+        getImage(image_id)
             .then((res: ApiResponse<GalleryItem>) => {
                 setItem(res.data)
             })
@@ -120,7 +120,7 @@ export default function ExploreDetail() {
                         <ProgressiveImage
                             className="ei-img"
                             src={item.url}
-                            original={item.originalUrl}
+                            original={item.original_url}
                             alt={item.title}
                         />
                     </div>
