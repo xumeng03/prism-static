@@ -2,7 +2,7 @@
 import {get, post, type ApiResponse} from '@/utils/http'
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
-import type {TokenScope, TokenData, CreateTokenResult} from '@/types/token'
+import type {TokenScope, TokenData, CreateTokenForm, CreateTokenResult} from '@/types/token'
 
 // 后端返回的 token 权限位 → 前端 scopes 数组
 export function scopesFromToken(t: TokenData): TokenScope[] {
@@ -19,12 +19,7 @@ export function listTokens(): Promise<ApiResponse<TokenData[]>> {
 }
 
 // 创建新的 API Token，指定权限范围；返回 token 明文，仅此一次可见
-export function createToken(data: {
-    name: string
-    can_read: boolean
-    can_write: boolean
-    can_delete: boolean
-}): Promise<ApiResponse<CreateTokenResult>> {
+export function createToken(data: CreateTokenForm): Promise<ApiResponse<CreateTokenResult>> {
     return post<ApiResponse<CreateTokenResult>>('/token/create', data)
 }
 
