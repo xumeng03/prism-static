@@ -164,7 +164,6 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
             type: file.name.split('.').pop()?.toLowerCase() as ImageFileType ?? 'jpg',
             size: file.size,
             status: 'waiting',            // 初始状态，等待轮到自己上传
-            description: '',
         }))
         // 新文件插入头部，让用户优先看到刚添加的文件
         setQueue((current) => [...newFiles, ...current])
@@ -284,7 +283,7 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
                         disabled={uploading}
                         onClick={async () => {
                             const done = queue.filter((item) => item.status === 'done')
-                            await confirmUpload(done)
+                            await confirmUpload(done.map((item) => item.id!))
                             toast.success(t('所有图片已添加至你的图库', 'All images added to your library'))
                             onUploaded?.()
                         }}

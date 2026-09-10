@@ -3,12 +3,12 @@
 import {post, upload, type ApiResponse} from '@/utils/http'
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
-import type {UploadQueueItem, UploadResult} from '@/types/upload'  // type-only，编译后完全擦除
+import type {UploadResult} from '@/types/upload'  // type-only，编译后完全擦除
 
-// 两阶段上传的第二步：将已上传完成的图片连同描述一并提交后端入库
-// 第一步（文件传输）由 uploadImage 完成，第二步（元数据确认）由此函数完成
-export function confirmUpload(items: UploadQueueItem[]): Promise<ApiResponse<null>> {
-    return post<ApiResponse<null>>('/image/confirm', items)
+// 两阶段上传的第二步：将已上传完成的图片 id 列表提交后端正式入库
+// 第一步（文件传输）由 uploadImage 完成，第二步（确认发布）由此函数完成
+export function confirmUpload(ids: number[]): Promise<ApiResponse<null>> {
+    return post<ApiResponse<null>>('/image/confirm', ids)
 }
 
 // 上传单张图片文件；onProgress 接收 0-100 的整数进度，供 UI 显示进度条

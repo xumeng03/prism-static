@@ -12,7 +12,6 @@ export interface UploadQueueItem {
     size: number            // 字节数，显示时调用 fmtSize()
     status: 'waiting' | 'uploading' | 'done' | 'error'
     url?: string            // 上传完成后由服务端返回的 CDN 地址，上传中为 undefined
-    description: string     // 图片描述，确认上传时一并提交给后端
 }
 
 // 后端返回的上传结果；字段 snake_case 直接对应数据库列名，前端按需取用
