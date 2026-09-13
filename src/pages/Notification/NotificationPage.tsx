@@ -54,8 +54,6 @@ export default function NotificationPage() {
                 setItems(list)
                 setReadIds(new Set(list.filter((n) => !n.unread).map((n) => n.id)))
             }
-        }).catch(() => {
-            // 5xx / 网络异常已由 http 拦截器统一提示，这里仅吞掉错误防止 unhandled rejection
         }).finally(() => setLoading(false))
     }
 
