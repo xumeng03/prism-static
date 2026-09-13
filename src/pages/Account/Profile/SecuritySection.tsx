@@ -1,5 +1,6 @@
 // ─── React 核心 ───────────────────────────────────────────────────────────────
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef} from 'react'
+import {useImmer} from 'use-immer'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
 import {SessionItem} from '@/components/account/SessionItem/SessionItem'
@@ -21,7 +22,7 @@ export function SecuritySection() {
     const t = useTranslation()
 
     // 设备列表；组件挂载（切换到安全页）时拉取
-    const [sessions, setSessions] = useState<DeviceItem[]>([])
+    const [sessions, setSessions] = useImmer<DeviceItem[]>([])
     // 设备列表是否已拉取；useRef 防重复请求，不需要触发重渲染
     const sessionsFetchedRef = useRef(false)
 
@@ -31,20 +32,21 @@ export function SecuritySection() {
         listDevices().then((res) => {
             if (res.code === 200) setSessions(res.data)
         })
-    }, [])
+    }, [setSessions])
 
-    // 密码表单字段；初始空字符串，保存成功后清空
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [new_password, setNewPassword] = useState('')
-    const [confirm_password, setConfirmPassword] = useState('')
-
-    // 三个密码框各自的明文/密文切换开关（原 PasswordInput 组件内部管理，内联后由父组件维护）
-    const [showCurrent, setShowCurrent] = useState(false)
-    const [showNew, setShowNew] = useState(false)
-    const [showConfirm, setShowConfirm] = useState(false)
+    // 密码表单：字段值 + 明文/密文切换开关合为一个 Immer 状态
+    const [pwForm, setPwForm] = useImmer({
+        current_password: '',
+        new_password: '',
+        confirm_password: '',
+        show_current: false,
+        show_new: false,
+        show_confirm: false,
+    })
 
     const savePassword = async () => {
-        if (!currentPassword || !new_password || !confirm_password) {
+        const {current_password, new_password, confirm_password} = pwForm
+        if (!current_password || !new_password || !confirm_password) {
             toast.error(t('请填写完整', 'Missing fields'))
             return
         }
@@ -52,21 +54,19 @@ export function SecuritySection() {
             toast.error(t('两次密码不一致', 'Passwords do not match'))
             return
         }
-        const res = await updatePassword({old_password: currentPassword, new_password})
+        const res = await updatePassword({old_password: current_password, new_password})
         if (res.code !== 200) {
             toast.error(res.message)
             return
         }
-        // 校验通过后清空表单，避免用户误以为字段仍有效
-        setCurrentPassword('')
-        setNewPassword('')
-        setConfirmPassword('')
+        // 清空值字段，保留 show_* 开关状态（用户习惯不应被重置）
+        setPwForm((d) => { d.current_password = ''; d.new_password = ''; d.confirm_password = '' })
         toast.success(t('密码已更新', 'Password updated'))
     }
 
     const signOutSession = (id: string) => {
         revokeDevice(id).then(() => {
-            setSessions((current) => current.filter((item) => item.id !== id))
+            setSessions((draft) => draft.filter((item) => item.id !== id))
             toast.info(t('设备已退出', 'Device signed out'))
         }).catch(() => {
             toast.error(t('退出失败', 'Sign out failed'))
@@ -85,12 +85,12 @@ export function SecuritySection() {
                     <label>{t('当前密码', 'Current password')}</label>
                     <div className="pw-field">
                         <input className="input"
-                               type={showCurrent ? 'text' : 'password'}
-                               value={currentPassword}
+                               type={pwForm.show_current ? 'text' : 'password'}
+                               value={pwForm.current_password}
                                placeholder={t('输入当前密码', 'Enter current password')}
-                               onChange={(e) => setCurrentPassword(e.target.value)}/>
-                        <button type="button" className="pw-eye" onClick={() => setShowCurrent((v) => !v)}>
-                            <Icon name={showCurrent ? 'eye-close' : 'eye-open'}/>
+                               onChange={(e) => setPwForm((d) => { d.current_password = e.target.value })}/>
+                        <button type="button" className="pw-eye" onClick={() => setPwForm((d) => { d.show_current = !d.show_current })}>
+                            <Icon name={pwForm.show_current ? 'eye-close' : 'eye-open'}/>
                         </button>
                     </div>
                 </div>
@@ -99,12 +99,12 @@ export function SecuritySection() {
                         <label>{t('新密码', 'New password')}</label>
                         <div className="pw-field">
                             <input className="input"
-                                   type={showNew ? 'text' : 'password'}
-                                   value={new_password}
+                                   type={pwForm.show_new ? 'text' : 'password'}
+                                   value={pwForm.new_password}
                                    placeholder={t('输入新密码', 'Enter new password')}
-                                   onChange={(e) => setNewPassword(e.target.value)}/>
-                            <button type="button" className="pw-eye" onClick={() => setShowNew((v) => !v)}>
-                                <Icon name={showNew ? 'eye-close' : 'eye-open'}/>
+                                   onChange={(e) => setPwForm((d) => { d.new_password = e.target.value })}/>
+                            <button type="button" className="pw-eye" onClick={() => setPwForm((d) => { d.show_new = !d.show_new })}>
+                                <Icon name={pwForm.show_new ? 'eye-close' : 'eye-open'}/>
                             </button>
                         </div>
                     </div>
@@ -112,12 +112,12 @@ export function SecuritySection() {
                         <label>{t('确认新密码', 'Confirm new password')}</label>
                         <div className="pw-field">
                             <input className="input"
-                                   type={showConfirm ? 'text' : 'password'}
-                                   value={confirm_password}
+                                   type={pwForm.show_confirm ? 'text' : 'password'}
+                                   value={pwForm.confirm_password}
                                    placeholder={t('再次输入新密码', 'Re-enter new password')}
-                                   onChange={(e) => setConfirmPassword(e.target.value)}/>
-                            <button type="button" className="pw-eye" onClick={() => setShowConfirm((v) => !v)}>
-                                <Icon name={showConfirm ? 'eye-close' : 'eye-open'}/>
+                                   onChange={(e) => setPwForm((d) => { d.confirm_password = e.target.value })}/>
+                            <button type="button" className="pw-eye" onClick={() => setPwForm((d) => { d.show_confirm = !d.show_confirm })}>
+                                <Icon name={pwForm.show_confirm ? 'eye-close' : 'eye-open'}/>
                             </button>
                         </div>
                     </div>

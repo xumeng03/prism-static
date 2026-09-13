@@ -102,26 +102,13 @@ export function ProfileSection() {
                     </button>
                     <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleAvatarChange}/>
                     <div className="ava-edit-txt">
-                        <b>{t('头像', 'Avatar')}</b>
-                        <p>{t('点击头像即可更换', 'Click the avatar to change it')}</p>
+                        <b>{user.username}</b>
+                        <p>{user.email}</p>
                     </div>
                 </div>
 
                 {/* ─── 资料表单 ────────────────────────────── */}
                 <div className="set-grid">
-                    <div className="field">
-                        <label>{t('用户名', 'Username')}</label>
-                        <div className="input-prefix">
-                            <span>Prism /</span>
-                            {/* 用户名不可修改，readOnly 防止编辑 */}
-                            <input className="input" disabled readOnly value={profile.username}/>
-                        </div>
-                    </div>
-                    <div className="field">
-                        <label>{t('邮箱地址', 'Email')}</label>
-                        {/* 邮箱不可修改，变更需走专属验证流程 */}
-                        <input className="input" disabled readOnly type="email" value={profile.email}/>
-                    </div>
                     <div className="field">
                         <label>{t('用户昵称', 'Nickname')}</label>
                         <input className="input" onChange={(event) => setProfile((current) => ({
