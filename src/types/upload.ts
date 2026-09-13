@@ -4,7 +4,9 @@ import type {ImageFileType} from './explore'
 export interface UploadQueueItem {
     uuid: string            // 客户端生成的临时标识，上传期间用于追踪队列条目（后端 id 尚未返回时）
     id?: number             // 后端返回的真实 ID，上传成功后才有值
-    album_id?: number       // 所属相册 ID，从相册详情页上传时传入
+    album_id?: number       // 所属相册 ID，从相册详情页上传时传入；用户在面板内选择后更新
+    description?: string    // 图片描述，在 confirmUpload 时提交给后端
+    category?: string       // 图片分类，对应 FeedCategory（trending/newest 除外）
     file: File              // 原始 File 对象，上传失败时用于重试
     preview: string         // URL.createObjectURL() 生成的本地预览地址，条目移除时须调用 revokeObjectURL
     name: string

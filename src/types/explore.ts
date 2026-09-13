@@ -2,7 +2,7 @@
 export type ImageFileType = 'jpg' | 'png' | 'gif' | 'webp'
 
 // 首页瀑布流的分类筛选项
-export type FeedCategory = 'trending' | 'newest' | 'portrait' | 'landscape' | 'street' | 'arch' | 'abstract' | 'animals'
+export type FeedCategory = 'trending' | 'newest' | 'portrait' | 'landscape' | 'street' | 'arch' | 'abstract' | 'game'
 
 // 图库中单张图片的完整数据结构
 export interface GalleryItem {

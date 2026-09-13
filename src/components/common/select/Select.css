@@ -35,12 +35,7 @@
 }
 
 .select-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  z-index: 30;
-  display: none;
+  /* position / top / left / width / display / z-index 由 Select.tsx 的内联样式注入（portal 模式） */
   max-height: 240px;
   overflow-y: auto;
   padding: 6px;
@@ -48,10 +43,6 @@
   border-radius: 12px;
   background: var(--bg);
   box-shadow: var(--shadow-lg);
-}
-
-.select.open .select-menu {
-  display: block;
   animation: pop 0.18s ease;
 }
 

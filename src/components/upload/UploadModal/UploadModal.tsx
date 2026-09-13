@@ -20,12 +20,14 @@ import {toast} from '@/store/toastStore'
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 import type {UploadQueueItem} from '@/types/upload'
 import type {ImageFileType} from '@/types/explore'
+import type {Album} from '@/types/album'
 
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
 import {uid} from '@/utils/random'
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 import {confirmUpload, uploadImage} from '@/api/uploadApi'
+import {listAlbums} from '@/api/albumApi'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './UploadModal.css'
@@ -57,6 +59,14 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
     const [queue, setQueue] = useState<UploadQueueItem[]>([])
     // 防止在上传过程中再次添加文件导致多条 Promise 链并发
     const uploadingRef = useRef(false)
+
+    // 当前用户的相册列表；弹窗挂载时拉取一次，供队列条目的相册选择器使用
+    const [albums, setAlbums] = useState<Album[]>([])
+    useEffect(() => {
+        listAlbums().then((res) => {
+            if (res.code === 200) setAlbums(res.data)
+        })
+    }, [])
 
     // 清空全部队列：批量 revoke 所有预览地址，同时重置上传锁
     // 注意：已发出的网络请求无法取消，但 ref 立即释放，用户可以重新选择文件
@@ -195,6 +205,12 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
         })
     }, [])
 
+    // 更新单条队列项的元数据（description / category / album_id）
+    // 由 QueueItem 展开面板中的字段变更触发，patch 合并到对应条目
+    const updateQueueItem = useCallback((uuid: string, patch: Partial<Pick<UploadQueueItem, 'category' | 'album_id' | 'description'>>) => {
+        setQueue((current) => current.map((q) => q.uuid === uuid ? {...q, ...patch} : q))
+    }, [])
+
     // 已完成数量，用于队列头部进度文案（如"2 / 5"）
     const completedCount = queue.filter((item) => item.status === 'done').length
     // 队列非空时生成进度字符串；空队列时为空字符串，避免渲染"0 / 0"
@@ -267,7 +283,8 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
                             <div className="upload-modal-queue-list">
                                 {/* key 用 uuid 而非 index，保证条目增删时 React diff 正确复用节点 */}
                                 {queue.map((item) => (
-                                    <QueueItem key={item.uuid} item={item} onRemove={removeQueueItem}/>
+                                    <QueueItem key={item.uuid} item={item} onRemove={removeQueueItem}
+                                               onUpdate={updateQueueItem} albums={albums}/>
                                 ))}
                             </div>
                         </div>
@@ -283,7 +300,12 @@ export function UploadModal({open, onClose, onUploaded, albumId}: UploadModalPro
                         disabled={uploading}
                         onClick={async () => {
                             const done = queue.filter((item) => item.status === 'done')
-                            await confirmUpload(done.map((item) => item.id!))
+                            await confirmUpload(done.map((item) => ({
+                                id: item.id!,
+                                description: item.description,
+                                category: item.category,
+                                album_id: item.album_id,
+                            })))
                             toast.success(t('所有图片已添加至你的图库', 'All images added to your library'))
                             onUploaded?.()
                         }}

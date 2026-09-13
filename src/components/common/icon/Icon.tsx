@@ -64,6 +64,7 @@ import HeartFilledIcon from '@/assets/icons/heart-filled.svg?react'
 import InfoIcon from '@/assets/icons/info.svg?react'
 import ApiIcon from '@/assets/icons/api.svg?react'
 import PawIcon from '@/assets/icons/paw.svg?react'
+import GameIcon from '@/assets/icons/game.svg?react'
 
 // ─── 样式 ─────────────────────────────────────────────────────────────────────
 import './Icon.css'
@@ -84,7 +85,7 @@ export type IconName =
     | 'github' | 'discord' | 'google'
     | 'user' | 'lock' | 'eye-open' | 'eye-close' | 'key' | 'shield' | 'logout'
     | 'mail' | 'phone' | 'settings' | 'laptop' | 'building'
-    | 'bell' | 'cloud' | 'flame' | 'heart' | 'heartFilled' | 'info' | 'api' | 'paw'
+    | 'bell' | 'cloud' | 'flame' | 'heart' | 'heartFilled' | 'info' | 'api' | 'paw' | 'game'
 
 // 名称 → 组件的查找表，O(1) 按 name 取到对应 SVG 组件
 // 用对象字面量而非 switch/if-else：结构更清晰，新增图标只需加一行键值对
@@ -103,7 +104,7 @@ const ICONS: Record<IconName, SvgIcon> = {
     shield: ShieldIcon, logout: LogoutIcon, mail: MailIcon, phone: PhoneIcon,
     settings: SettingsIcon, laptop: LaptopIcon, building: BuildingIcon,
     bell: BellIcon, cloud: CloudIcon, flame: FlameIcon, heart: HeartIcon,
-    heartFilled: HeartFilledIcon, info: InfoIcon, api: ApiIcon, paw: PawIcon,
+    heartFilled: HeartFilledIcon, info: InfoIcon, api: ApiIcon, paw: PawIcon, game: GameIcon,
 }
 
 interface IconProps {

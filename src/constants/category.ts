@@ -69,11 +69,11 @@ export const CATEGORIES: CategoryItem[] = [
         icon: 'building',
     },
     {
-        id: 'animals',
-        en: 'Animals',
-        zh: '动物',
-        subEn: 'Wildlife encounters and precious moments from the natural world',
-        subZh: '野生动物与自然生态的珍贵瞬间',
-        icon: 'paw',
+        id: 'game',
+        en: 'Game',
+        zh: '游戏',
+        subEn: 'Game screenshots, fan art and visual moments from the gaming world',
+        subZh: '游戏截图、同人创作与电子游戏世界的精彩视觉瞬间',
+        icon: 'game',
     },
 ]
