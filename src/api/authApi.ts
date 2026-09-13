@@ -26,9 +26,9 @@ export function getMe(): Promise<ApiResponse<User>> {
     return get<ApiResponse<User>>('/auth/me')
 }
 
-// 邮箱验证：GET /auth/email/verify?token=xxx
-export function verifyEmail(token: string): Promise<ApiResponse<null>> {
-    return get<ApiResponse<null>>('/auth/email/verify', {token})
+// 邮箱验证：GET /auth/email/verify?email=xxx&token=xxx
+export function verifyEmail(email: string, token: string): Promise<ApiResponse<null>> {
+    return get<ApiResponse<null>>('/auth/email/verify', {email, token})
 }
 
 // 重发验证邮件：POST /auth/email/resend

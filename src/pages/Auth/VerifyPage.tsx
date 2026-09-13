@@ -25,21 +25,21 @@ export function VerifyPage() {
 
     // 读取 URL 查询参数：token 用于调用验证接口，email 用于展示“请查收邮件”提示
     const [searchParams] = useSearchParams()
-    const token = searchParams.get('token')
     const email = searchParams.get('email')
+    const token = searchParams.get('token')
 
     // 验证状态：loading 验证中 / success 成功 / error 失败（token 无效或已过期）
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
     // 带 token 进入时自动调验证接口，成功或失败各切换对应状态；token 为空则跳过
     useEffect(() => {
-        if (!token) return
-        verifyEmail(token).then((res) => {
+        if (!token || !email) return
+        verifyEmail(email, token).then((res) => {
             setStatus(res.code === 200 ? 'success' : 'error')
         }).catch(() => {
             setStatus('error')
         })
-    }, [token])
+    }, [token, email])
 
     // 仅 email 无 token → 注册成功后跳转来的“请查收邮件”
     if (!token && email) {
