@@ -35,14 +35,15 @@ export function SessionItem({session, onSignOut}: SessionItemProps) {
             <div className="session-ic"><Icon name={DEVICE_ICON[session.kind] ?? 'laptop'}/></div>
             <div className="session-info">
                 <b>
-                    {t(session.deviceZh, session.deviceEn)}
+                    {/* device / browser 由后端直接下发，无需前端翻译 */}
+                    {session.device}{session.browser && ` · ${session.browser}`}
                     {/* 仅当前会话显示「当前」标签 */}
                     {session.current &&
                         <span className="session-now">{t('当前', 'Current')}</span>
                     }
                 </b>
                 <p>
-                    {session.locationZh && `${t(session.locationZh, session.locationEn)} / `}
+                    {session.location && `${session.location} / `}
                     {session.current ? t('当前在线', 'Current session') : t(...formatRelativeTime(session.time))}
                 </p>
             </div>

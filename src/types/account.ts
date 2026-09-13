@@ -15,11 +15,10 @@ export interface AccountTab {
 // 当前用户的登录设备
 export interface DeviceItem {
     id: string
-    kind: string
-    deviceZh: string
-    deviceEn: string
-    locationZh: string
-    locationEn: string
+    kind: string       // phone / laptop / unknown，用于映射图标
+    device: string     // 设备名称，后端直接返回，无需前端翻译
+    browser: string    // 浏览器名称，后端直接返回
+    location: string   // 登录地点，后端直接返回
     time: string
     current: boolean
 }
