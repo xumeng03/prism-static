@@ -5,10 +5,10 @@ import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Button} from '@/components/common/button/Button'
-import {Empty} from '@/components/common/empty/Empty'
-import {Icon} from '@/components/common/icon/Icon'
-import {ProgressiveImage} from '@/components/common/image/ProgressiveImage'
+import {Button} from '@/components/ui/Button'
+import {Empty} from '@/components/ui/Empty'
+import {Icon} from '@/components/ui/Icon'
+import {ProgressiveImage} from '@/components/ui/ProgressiveImage'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

@@ -7,10 +7,10 @@ import {RouterProvider} from 'react-router-dom'
 
 // ─── 内部 Provider ────────────────────────────────────────────────────────────
 // ToastProvider 在根层挂载全局消息队列，任意位置通过模块级 toast.success / error / info 推送提示条
-import {ToastProvider} from '@/components/provider/ToastProvider/ToastProvider'
+import {ToastProvider} from '@/components/ui/ToastProvider'
 
 // ─── 路由配置 ─────────────────────────────────────────────────────────────────
-import {router} from '@/routers'
+import {router} from '@/router'
 
 // ─── 全局样式 ─────────────────────────────────────────────────────────────────
 import './index.css'  // CSS 变量、reset、字体等全局基础样式，必须在组件之前加载

@@ -6,9 +6,9 @@ import {useImmer} from 'use-immer'
 import {useNavigate, useSearchParams} from 'react-router-dom'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {AuthLogo} from '@/components/common/auth/AuthLogo'
-import {Button} from '@/components/common/button/Button'
-import {Icon} from '@/components/common/icon/Icon'
+import {AuthLogo} from '@/components/ui/AuthLogo'
+import {Button} from '@/components/ui/Button'
+import {Icon} from '@/components/ui/Icon'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

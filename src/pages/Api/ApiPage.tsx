@@ -2,8 +2,8 @@
 import {useState} from 'react'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Code} from '@/components/common/code/Code'  // 带语法高亮和复制按钮的代码块组件
-import {Icon} from '@/components/common/icon/Icon'
+import {Code} from '@/components/ui/Code'  // 带语法高亮和复制按钮的代码块组件
+import {Icon} from '@/components/ui/Icon'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

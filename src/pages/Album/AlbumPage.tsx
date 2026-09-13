@@ -8,9 +8,9 @@ import {useNavigate} from 'react-router-dom'
 import {listAlbums, createAlbum, updateAlbum, deleteAlbum} from '@/api/albumApi'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {AlbumCard} from '@/components/album/AlbumCard/AlbumCard'
-import {Icon} from '@/components/common/icon/Icon'
-import {Modal} from '@/components/common/modal/Modal'
+import {AlbumCard} from '@/components/album/AlbumCard'
+import {Icon} from '@/components/ui/Icon'
+import {Modal} from '@/components/ui/Modal'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'  // 返回 (zh, en) => string 函数

@@ -2,7 +2,7 @@
 import {useState} from 'react'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Modal} from '@/components/common/modal/Modal'  // 封装了遮罩层、ESC 关闭、点击外部关闭等行为
+import {Modal} from '@/components/ui/Modal'  // 封装了遮罩层、ESC 关闭、点击外部关闭等行为
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

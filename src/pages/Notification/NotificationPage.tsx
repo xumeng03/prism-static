@@ -2,10 +2,10 @@
 import {useEffect, useMemo, useState} from 'react'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Button} from '@/components/common/button/Button'
-import {Empty} from '@/components/common/empty/Empty'
-import {Icon} from '@/components/common/icon/Icon'
-import {NotificationItem} from '@/components/notification/NotificationItem/NotificationItem'
+import {Button} from '@/components/ui/Button'
+import {Empty} from '@/components/ui/Empty'
+import {Icon} from '@/components/ui/Icon'
+import {NotificationItem} from '@/components/notification/NotificationItem'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

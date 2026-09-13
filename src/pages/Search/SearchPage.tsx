@@ -5,11 +5,11 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Masonry} from 'masonic'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Button} from '@/components/common/button/Button'
-import {Empty} from '@/components/common/empty/Empty'
-import {GalleryCard} from '@/components/gallery/GalleryCard/GalleryCard'
-import {GalleryDetail} from '@/components/gallery/GalleryDetail/GalleryDetail'
-import {Icon} from '@/components/common/icon/Icon'
+import {Button} from '@/components/ui/Button'
+import {Empty} from '@/components/ui/Empty'
+import {GalleryCard} from '@/components/gallery/GalleryCard'
+import {GalleryDetail} from '@/components/gallery/GalleryDetail'
+import {Icon} from '@/components/ui/Icon'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'  // 返回 (zh, en) => string 函数

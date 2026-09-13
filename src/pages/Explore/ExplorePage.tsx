@@ -7,10 +7,10 @@ import {useNavigate} from 'react-router-dom' // 编程式路由跳转，不触�
 import {Masonry} from 'masonic'              // 高性能虚拟化瀑布流组件
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Button} from '@/components/common/button/Button'
-import {GalleryCard} from '@/components/gallery/GalleryCard/GalleryCard'
-import {Icon} from '@/components/common/icon/Icon'
-import {UploadModal} from '@/components/upload/UploadModal/UploadModal'
+import {Button} from '@/components/ui/Button'
+import {GalleryCard} from '@/components/gallery/GalleryCard'
+import {Icon} from '@/components/ui/Icon'
+import {UploadModal} from '@/components/upload/UploadModal'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation' // 返回 (zh, en) => string 的翻译函数

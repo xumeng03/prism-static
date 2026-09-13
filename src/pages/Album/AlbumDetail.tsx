@@ -11,13 +11,13 @@ import {listAlbumImages, getAlbum} from '@/api/albumApi'
 import {batchDeleteImages} from '@/api/libraryApi'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {MosaicCard} from '@/components/album/MosaicCard/MosaicCard'
-import {Button} from '@/components/common/button/Button'
-import {Empty} from '@/components/common/empty/Empty'
-import {Icon} from '@/components/common/icon/Icon'
-import {Modal} from '@/components/common/modal/Modal'
-import {GalleryDetail} from '@/components/gallery/GalleryDetail/GalleryDetail'  // item=null 时自身隐藏
-import {UploadModal} from '@/components/upload/UploadModal/UploadModal'  // 受控弹窗，由 open prop 控制显隐
+import {MosaicCard} from '@/components/album/MosaicCard'
+import {Button} from '@/components/ui/Button'
+import {Empty} from '@/components/ui/Empty'
+import {Icon} from '@/components/ui/Icon'
+import {Modal} from '@/components/ui/Modal'
+import {GalleryDetail} from '@/components/gallery/GalleryDetail'  // item=null 时自身隐藏
+import {UploadModal} from '@/components/upload/UploadModal'  // 受控弹窗，由 open prop 控制显隐
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'  // 返回 (zh, en) => string 函数

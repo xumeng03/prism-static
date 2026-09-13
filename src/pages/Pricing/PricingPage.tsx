@@ -5,8 +5,8 @@ import {useEffect, useState} from 'react'
 import {useNavigate, useSearchParams} from 'react-router-dom'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Modal} from '@/components/common/modal/Modal'
-import {PlanCard} from '@/components/account/PlanCard/PlanCard'
+import {Modal} from '@/components/ui/Modal'
+import {PlanCard} from '@/components/account/PlanCard'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'

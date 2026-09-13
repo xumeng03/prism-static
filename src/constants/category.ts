@@ -1,5 +1,5 @@
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
-import type {IconName} from '@/components/common/icon/Icon'
+import type {IconName} from '@/components/ui/Icon'
 
 // 探索页分类项的完整数据结构
 export type CategoryItem = {

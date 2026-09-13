@@ -6,15 +6,15 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useImmer} from 'use-immer'
 
 // ─── 内部组件 ─────────────────────────────────────────────────────────────────
-import {Button} from '@/components/common/button/Button'
-import {GalleryDetail} from '@/components/gallery/GalleryDetail/GalleryDetail'
-import {Icon} from '@/components/common/icon/Icon'
-import {Modal} from '@/components/common/modal/Modal'
-import {Filter} from '@/components/common/filter/Filter'
-import type {FilterOption} from '@/components/common/filter/Filter'
-import {UploadModal} from '@/components/upload/UploadModal/UploadModal'
-import {Empty} from '@/components/common/empty/Empty'
-import {LibraryCard} from '@/components/library/LibraryCard/LibraryCard'
+import {Button} from '@/components/ui/Button'
+import {GalleryDetail} from '@/components/gallery/GalleryDetail'
+import {Icon} from '@/components/ui/Icon'
+import {Modal} from '@/components/ui/Modal'
+import {Filter} from '@/components/ui/Filter'
+import type {FilterOption} from '@/components/ui/Filter'
+import {UploadModal} from '@/components/upload/UploadModal'
+import {Empty} from '@/components/ui/Empty'
+import {LibraryCard} from '@/components/library/LibraryCard'
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 import {useTranslation} from '@/hooks/useTranslation'  // 返回 (zh, en) => string 函数
